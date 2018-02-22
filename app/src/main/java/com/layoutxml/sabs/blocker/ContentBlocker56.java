@@ -72,56 +72,86 @@ public class ContentBlocker56 implements ContentBlocker {
         if (isEnabled()) {
             disableBlocker();
         }
+        //CustomWhitelist whiteUrlsString
+        Log.d(TAG, "Blocker: CW");
         List<WhiteUrl> whiteUrls = appDatabase.whiteUrlDao().getAll2();
-
         List<String> whiteUrlsString = new ArrayList<>();
         for (WhiteUrl whiteUrl : whiteUrls) {
             whiteUrlsString.add(whiteUrl.url);
         }
 
+        //Blacklist denyList
+        Log.d(TAG, "Blocker: B");
         List<String> denyList = new ArrayList<>();
         List<BlockUrlProvider> blockUrlProviders = appDatabase.blockUrlProviderDao().getBlockUrlProviderBySelectedFlag(1);
         for (BlockUrlProvider blockUrlProvider : blockUrlProviders) {
             List<BlockUrl> blockUrls = appDatabase.blockUrlDao().getUrlsByProviderId(blockUrlProvider.id);
-
-        for (BlockUrl blockUrl : blockUrls) {
-            if (whiteUrlsString.contains(blockUrl.url)) {
-                continue;
-            }
-            if (blockUrl.url.contains("*")) {
-                boolean validWildcard = BlockUrlPatternsMatch.wildcardValid(blockUrl.url);
-                if (!validWildcard) {
-                    continue;
+            for (BlockUrl blockUrl : blockUrls) {
+                if (blockUrl.url.contains("*")) {
+                    boolean validWildcard = BlockUrlPatternsMatch.wildcardValid(blockUrl.url);
+                    if (validWildcard)
+                    {
+                        Boolean fits = true;
+                        for (String white : whiteUrlsString)
+                        {
+                            if (blockUrl.url.equals(white))
+                                fits=false;
+                        }
+                        if (fits)
+                            denyList.add(blockUrl.url);
+                    }
+                } else {
+                    blockUrl.url = blockUrl.url.replaceAll("^(www)([0-9]{0,3})?(\\.)", "");
+                    boolean validDomain = BlockUrlPatternsMatch.domainValid(blockUrl.url);
+                    if (validDomain)
+                    {
+                        Boolean fits = true;
+                        for (String white : whiteUrlsString)
+                        {
+                            if (blockUrl.url.equals(white))
+                                fits=false;
+                        }
+                        if (fits)
+                            denyList.add("*" + blockUrl.url + "*");
+                    }
                 }
-                denyList.add(blockUrl.url);
-            } else {
-                blockUrl.url = blockUrl.url.replaceAll("^(www)([0-9]{0,3})?(\\.)", "");
-                boolean validDomain = BlockUrlPatternsMatch.domainValid(blockUrl.url);
-                if (!validDomain) {
-                    continue;
-                }
-                denyList.add("*" + blockUrl.url);
-            }
             }
         }
 
+        //CustomBlacklist ^
+        Log.d(TAG, "Blocker: CB");
         List<UserBlockUrl> userBlockUrls = appDatabase.userBlockUrlDao().getAll2();
-
         if (userBlockUrls != null && userBlockUrls.size() > 0) {
             for (UserBlockUrl userBlockUrl : userBlockUrls) {
-                    final String urlReady = "*" + userBlockUrl.url + "*";
-                    denyList.add(urlReady);
+                userBlockUrl.url = userBlockUrl.url.replaceAll("^(www)([0-9]{0,3})?(\\.)", "");
+                final String urlReady = "*" + userBlockUrl.url + "*";
+                denyList.add(urlReady);
             }
         }
+
+        //Finished rules
+        Log.d(TAG, "Blocker: FR");
         List<DomainFilterRule> rules = new ArrayList<>();
         AppIdentity appIdentity = new AppIdentity("*", null);
-        rules.add(new DomainFilterRule(appIdentity, denyList, new ArrayList<>()));
+        int begin=0, end=2000; //Why 2000? I don't know. Just playing safe.
+        while (begin!=end)
+        {
+            rules.add(new DomainFilterRule(appIdentity, denyList.subList(begin,end), new ArrayList<>()));
+            begin=end;
+            if (end+2000<=denyList.size())
+                end+=2000;
+            else
+                end=denyList.size();
+        }
         List<String> superAllow = new ArrayList<>();
         superAllow.add("*");
         List<AppInfo> appInfos = appDatabase.applicationInfoDao().getWhitelistedApps();
         for (AppInfo app : appInfos) {
             rules.add(new DomainFilterRule(new AppIdentity(app.packageName, null), new ArrayList<>(), superAllow));
         }
+
+        //Port53
+        Log.d(TAG, "Blocker: P53");
         try {
             if(BlockPort53)
             {
@@ -136,12 +166,13 @@ public class ContentBlocker56 implements ContentBlocker {
                     portRules[1] = new FirewallRule(FirewallRule.RuleType.DENY, Firewall.AddressType.IPV6);
                     portRules[1].setIpAddress("*");
                     portRules[1].setPortNumber("53");
+                    assert mFirewall != null;
                     FirewallResponse[] response = mFirewall.addRules(portRules);
                 } else
                 {
                     Log.d(TAG, "BLOCKING PORT 53 on Chrome only");
                     FirewallRule[] portRules = new FirewallRule[2];
-                    List<String> Port53Apps = new ArrayList<String>(Arrays.asList("com.android.chrome","com.chrome.beta", "com.chrome.dev", "com.chrome.canary"));
+                    List<String> Port53Apps = new ArrayList<>(Arrays.asList("com.android.chrome", "com.chrome.beta", "com.chrome.dev", "com.chrome.canary"));
                     for (String app : Port53Apps) {
                         portRules[0] = new FirewallRule(FirewallRule.RuleType.DENY, Firewall.AddressType.IPV4);
                         portRules[0].setIpAddress("*");
@@ -152,6 +183,7 @@ public class ContentBlocker56 implements ContentBlocker {
                         portRules[1].setPortNumber("53");
                         portRules[1].setApplication(new AppIdentity(app, null));
                     }
+                    assert mFirewall != null;
                     FirewallResponse[] response = mFirewall.addRules(portRules);
                 }
             }
@@ -161,20 +193,36 @@ public class ContentBlocker56 implements ContentBlocker {
             return false;
         }
 
+        //Final blocking
+        Log.d(TAG, "Blocker: FB");
         try {
-            FirewallResponse[] response = mFirewall.addDomainFilterRules(rules);
+            Boolean allResponses = true;
+            begin=0;
+            end=1;
+            while(begin!=end)
+            {
+                Log.d(TAG, "Blocker: FBn");
+                FirewallResponse[] response = mFirewall.addDomainFilterRules(rules.subList(begin,end));
+                if (FirewallResponse.Result.FAILED == response[0].getResult())
+                {
+                    allResponses=false;
+                }
+                begin=end;
+                if (end+1<=rules.size())
+                    end+=1;
+                else
+                    end=rules.size();
+            }
             if (!mFirewall.isFirewallEnabled()) {
                 mFirewall.enableFirewall(true);
             }
             if (!mFirewall.isDomainFilterReportEnabled()) {
                 mFirewall.enableDomainFilterReport(true);
             }
-            if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (SecurityException ex) {
+            return allResponses;
+        }
+        catch (SecurityException ex) {
+            Log.d(TAG, "Blocker: FAILED2");
             return false;
         }
     }
@@ -183,6 +231,7 @@ public class ContentBlocker56 implements ContentBlocker {
     public boolean disableBlocker() {
         FirewallResponse[] response;
         try {
+            assert mFirewall != null;
             response = mFirewall.clearRules(Firewall.FIREWALL_ALL_RULES);
             response = mFirewall.removeDomainFilterRules(DomainFilterRule.CLEAR_ALL);
             if (mFirewall.isFirewallEnabled()) {
@@ -199,6 +248,7 @@ public class ContentBlocker56 implements ContentBlocker {
 
     @Override
     public boolean isEnabled() {
+        assert mFirewall != null;
         return mFirewall.isFirewallEnabled();
     }
 
