@@ -118,34 +118,46 @@ public class PackageDisablerFragment extends LifecycleFragment {
 
         installedAppsView = view.findViewById(R.id.installed_apps_list);
         installedAppsView = view.findViewById(R.id.installed_apps_list);
-        installedAppsView.setOnItemClickListener((AdapterView<?> adView, View v, int i, long l) -> {
-            DisablerAppAdapter disablerAppAdapter = (DisablerAppAdapter) adView.getAdapter();
-            final String name = disablerAppAdapter.getItem(i).packageName;
-            new AsyncTask<Void, Void, Boolean>() {
-                @Override
-                protected Boolean doInBackground(Void... o) {
-                    AppInfo appInfo = mDb.applicationInfoDao().getByPackageName(name);
-                    appInfo.disabled = !appInfo.disabled;
-                    if (appInfo.disabled)
-                    {
-                        appPolicy.setDisableApplication(name);
-                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Disabled " + name, Snackbar.LENGTH_SHORT).show();
+        installedAppsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adView, View v, int i, long l) {
+                DisablerAppAdapter disablerAppAdapter = (DisablerAppAdapter) adView.getAdapter();
+                final String name = disablerAppAdapter.getItem(i).packageName;
+                new AsyncTask<Void, Void, Boolean>() {
+                    @Override
+                    protected Boolean doInBackground(Void... o) {
+                        AppInfo appInfo = mDb.applicationInfoDao().getByPackageName(name);
+                        appInfo.disabled = !appInfo.disabled;
+                        if (appInfo.disabled) {
+                            appPolicy.setDisableApplication(name);
+                            Snackbar.make(getActivity().findViewById(android.R.id.content), "Disabled " + name, Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            appPolicy.setEnableApplication(name);
+                            Snackbar.make(getActivity().findViewById(android.R.id.content), "Enabled " + name, Snackbar.LENGTH_SHORT).show();
+                        }
+                        mDb.applicationInfoDao().insert(appInfo);
+                        disablerAppAdapter.applicationInfoList.set(i, appInfo);
+                        return appInfo.disabled;
                     }
-                    else
-                    {
-                        appPolicy.setEnableApplication(name);
-                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Enabled " + name, Snackbar.LENGTH_SHORT).show();
-                    }
-                    mDb.applicationInfoDao().insert(appInfo);
-                    disablerAppAdapter.applicationInfoList.set(i, appInfo);
-                    return appInfo.disabled;
-                }
 
-                @Override
-                protected void onPostExecute(Boolean b) {
-                    ((Switch) v.findViewById(R.id.switchDisable)).setChecked(!b);
-                }
-            }.execute();
+                    @Override
+                    protected void onPostExecute(Boolean b) {
+                        ((Switch) v.findViewById(R.id.switchDisable)).setChecked(!b);
+                    }
+                }.execute();
+            }
+        });
+
+        installedAppsView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adView, View v, int i, long l) {
+                DisablerAppAdapter disablerAppAdapter = (DisablerAppAdapter) adView.getAdapter();
+                final String name = disablerAppAdapter.getItem(i).packageName;
+                Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                intent.setData(Uri.parse("package:" + name));
+                startActivity(intent);
+                return true;
+            }
         });
 
         loadApplicationsList(false, "");
