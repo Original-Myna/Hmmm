@@ -69,10 +69,6 @@ public class WhitelistFragment extends LifecycleFragment {
         });
         addWhitelistUrl.setOnClickListener(v -> {
             String urlToAdd = whitelistUrlEditText.getText().toString();
-            if (!Patterns.WEB_URL.matcher(urlToAdd).matches()) {
-                Toast.makeText(this.getContext(), "Url not valid. Please check", Toast.LENGTH_SHORT).show();
-                return;
-            }
             AsyncTask.execute(() -> {
                 WhiteUrl whiteUrl = new WhiteUrl(urlToAdd);
                 appDatabase.whiteUrlDao().insert(whiteUrl);

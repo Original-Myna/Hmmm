@@ -109,10 +109,8 @@ public class ContentBlocker56 implements ContentBlocker {
 
         if (userBlockUrls != null && userBlockUrls.size() > 0) {
             for (UserBlockUrl userBlockUrl : userBlockUrls) {
-                if (Patterns.WEB_URL.matcher(userBlockUrl.url).matches()) {
                     final String urlReady = "*" + userBlockUrl.url + "*";
                     denyList.add(urlReady);
-                }
             }
         }
         List<DomainFilterRule> rules = new ArrayList<>();

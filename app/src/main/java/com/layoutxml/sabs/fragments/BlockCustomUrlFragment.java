@@ -69,10 +69,6 @@ public class BlockCustomUrlFragment extends LifecycleFragment {
         Button addCustomBlockedUrlButton = view.findViewById(R.id.addCustomBlockedUrlButton);
         addCustomBlockedUrlButton.setOnClickListener(v -> {
             String urlToAdd = addBlockedUrlEditText.getText().toString().trim().toLowerCase();
-            if (!Patterns.WEB_URL.matcher(urlToAdd).matches()) {
-                Toast.makeText(context, "Url not valid. Please check", Toast.LENGTH_SHORT).show();
-                return;
-            }
             AsyncTask.execute(() -> {
                 UserBlockUrl userBlockUrl = new UserBlockUrl(urlToAdd);
                 appDatabase.userBlockUrlDao().insert(userBlockUrl);
