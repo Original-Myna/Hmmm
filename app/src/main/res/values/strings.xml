@@ -7,7 +7,7 @@
     <string name="block_disabled">SABS is off.</string>
     <string name="enabling_sabs">Enabling SABS.</string>
     <string name="disabling_sabs">Disabling SABS.</string>
-    <string name="app_not_supported">App isn\'t supported on your device. If your device is not rooted and made by Samsung, report this to developer.</string>
+    <string name="app_not_supported">App isn\'t supported on your device. If your device is not rooted and is made by Samsung, report this to developer.</string>
     <string name="steps_to_enable_reminder">1. Press activate.
         \n2. Paste your Knox standard SDK enterprise key below. If you don\'t have it, sign in here - https://seap.samsung.com/enrollment, and get your <b>Enterprise</b> key here - https://seap.samsung.com/license-keys. It should not start with letters KLM.</string>
     <string name="turn_on_admin">Activate</string>
@@ -18,8 +18,8 @@
     <string name="block_button_text_turn_on">Turn On</string>
     <string name="block_button_text_enabling">Enabling…</string>
     <string name="block_button_text_disabling">Disabling…</string>
-    <string name="edit_blocked_url_list">Manage blocked URLs</string>
-    <string name="whitelistInfo">Consider whitelisting the app first. You can\'t whitelist wildcards. Enter a valid url only. Press on the url to remove it. After whitelisting urls, turn blocking off and on.</string>
+    <string name="edit_blocked_url_list">Manage blocked domains</string>
+    <string name="whitelistInfo">Consider whitelisting the app first. You can\'t whitelist wildcards. Enter a valid domain nae only. Press on a name to remove it. After whitelisting, turn blocking off then on.</string>
     <string name="edit_blocked_apps_list">Manage blocking in apps</string>
     <string name="delete_app">Uninstall SABS</string>
     <string name="delete_app_dialog_title">Delete app</string>
@@ -34,10 +34,10 @@
     <string name="zero_dns" translatable="false">0.0.0.0</string>
     <string name="example_com" translatable="false">example.com</string>
     <string name="block">Block</string>
-    <string name="allow_custom_urls">Whitelist URLs</string>
+    <string name="allow_custom_urls">Whitelist domains</string>
     <string name="allow">Allow</string>
-    <string name="block_custom_urls">Blacklist URLs</string>
-    <string name="blacklistInfo">Enter a valid url only. Press on the url to remove it. After blacklisting urls, turn blocking off and on.</string>
+    <string name="block_custom_urls">Blacklist domains</string>
+    <string name="blacklistInfo">Enter a valid domain name only. Press on a name to remove it. After blacklisting, turn blocking off then on.</string>
     <string name="download_manager_sharedPrefs" translatable="false">download_manager_sharedPrefs</string>
     <string name="download_manager_reference_id" translatable="false">download_manager_reference_id</string>
     <string name="blocker_fragment_title">Blocker</string>
@@ -47,9 +47,9 @@
     <string name="last_day_blocked">"Blocked in the last 24 hours: "</string>
     <string name="loading_saved_dns">Loading saved dns addresses</string>
     <string name="check_input_dns">Check your input data</string>
-    <string name="enable_app_for_dns">Ad blocking must be on</string>
-    <string name="changed_dns">Dns addresses has been changed"</string>
-    <string name="restored_dns">DNS address has been restored</string>
+    <string name="enable_app_for_dns">Domain blocking must be on</string>
+    <string name="changed_dns">DNS addresses have been changed"</string>
+    <string name="restored_dns">DNS addresses have been restored</string>
     <string name="help_developers_to_keep_up_development" translatable="false">
         Well, I\'m not even in the college yet.
         \nWould be nice to have a spare dollar in the future.
@@ -65,16 +65,16 @@
     <string name="app_list_sorted_by_alphabet">Sorted alphabetically</string>
     <string name="subscribe">Subscribe for {{price}} per month</string>
     <string name="subscribe_three_month">Subscribe for {{price}} per 3 month with 20% discount</string>
-    <string name="subscribeInfo">You can add more domain (host) list urls. It must only include domains and comments in lines starting with #. Other lines may break SABS. After adding an url, updating a file or (un)checking a box, turn blocking off and on.</string>
+    <string name="subscribeInfo">You can add more domain (host) list URLs. It must only include domain names and comments in lines starting with #. Other lines may break SABS. After adding a URL, updating a file or (un)checking a box, turn blocking off then on.</string>
     <string name="ads_example_com" translatable="false">example.com</string>
     <string name="your_device_running_old_knox_version">Your device is running an old version of KNOX. Upgrade your device or perform an update. Otherwise, you may experience crashes on certain functions.</string>
-    <string name="adblock_whitelist">Adblocked Apps</string>
+    <string name="adblock_whitelist">Whitelisted Apps</string>
     <string name="application_icon">App Icon</string>
     <string name="sort_by_alphabet">Sort Alphabetically</string>
     <string name="sort_by_install_time">Sort by Install Date</string>
     <string name="sort_by_disabled">Show Disabled First</string>
-    <string name="disabler_import_storage">Import disabled app list</string>
-    <string name="disabler_export_storage">Export disabled app lis</string>
+    <string name="disabler_import_storage">Import disabled apps list</string>
+    <string name="disabler_export_storage">Export disabled apps lis</string>
     <string name="disabler_enable_all">Enable All Apps</string>
     <string name="imported_from_storage">Importing disabled apps from storage</string>
     <string name="exported_to_storage">Disabled apps exported to sabs.txt</string>
@@ -145,7 +145,7 @@
     <string name="options">Options</string>
     <string name="steps_to_enable_reminder_error_KLM">Paste your Knox standard SDK Enterprise key below.  It should not start with letters KLM.</string>
     <string name="lock_dialog_Title">Warning</string>
-    <string name="lock_dialog_body">Some actions may make your system unstable. To prevert any changes done, select \"Uninstall SABS\" in <b>app settings!</b> Otherwise, changes to the system will stay intact. This screen is shown so that you wouldn\'t change anything while your phone is in your pocket.</string>
+    <string name="lock_dialog_body">Some actions may make your system unstable. To prevent any changes to get applied, select \"Uninstall SABS\" in <b>app settings!</b> Otherwise, the changes to the system will be applied. This screen is shown so that you don\'t change anything inadvertently while your phone is in your pocket.</string>
     <string name="ok">OK</string>
     <string name="exit">exit</string>
     <string name="undo">UNDO</string>
