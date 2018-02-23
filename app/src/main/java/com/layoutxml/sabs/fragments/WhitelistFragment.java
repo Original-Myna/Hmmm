@@ -18,6 +18,7 @@ import com.layoutxml.sabs.MainActivity;
 import com.layoutxml.sabs.R;
 import com.layoutxml.sabs.db.AppDatabase;
 import com.layoutxml.sabs.db.entity.WhiteUrl;
+import com.layoutxml.sabs.utils.BlockUrlPatternsMatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,11 @@ public class WhitelistFragment extends LifecycleFragment {
         });
         addWhitelistUrl.setOnClickListener(v -> {
             String urlToAdd = whitelistUrlEditText.getText().toString();
+            if (!(BlockUrlPatternsMatch.wildcardValid(urlToAdd)) && !(BlockUrlPatternsMatch.domainValid(urlToAdd)))
+            {
+                Toast.makeText(this.getContext(), "Url not valid. Please check", Toast.LENGTH_SHORT).show();
+                return;
+            }
             AsyncTask.execute(() -> {
                 WhiteUrl whiteUrl = new WhiteUrl(urlToAdd);
                 appDatabase.whiteUrlDao().insert(whiteUrl);

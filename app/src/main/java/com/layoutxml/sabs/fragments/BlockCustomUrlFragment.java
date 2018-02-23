@@ -19,6 +19,7 @@ import com.layoutxml.sabs.MainActivity;
 import com.layoutxml.sabs.R;
 import com.layoutxml.sabs.db.AppDatabase;
 import com.layoutxml.sabs.db.entity.UserBlockUrl;
+import com.layoutxml.sabs.utils.BlockUrlPatternsMatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,11 @@ public class BlockCustomUrlFragment extends LifecycleFragment {
         Button addCustomBlockedUrlButton = view.findViewById(R.id.addCustomBlockedUrlButton);
         addCustomBlockedUrlButton.setOnClickListener(v -> {
             String urlToAdd = addBlockedUrlEditText.getText().toString().trim().toLowerCase();
+            if (!(BlockUrlPatternsMatch.wildcardValid(urlToAdd)) && !(BlockUrlPatternsMatch.domainValid(urlToAdd)))
+            {
+                Toast.makeText(context, "Url not valid. Please check", Toast.LENGTH_SHORT).show();
+                return;
+            }
             AsyncTask.execute(() -> {
                 UserBlockUrl userBlockUrl = new UserBlockUrl(urlToAdd);
                 appDatabase.userBlockUrlDao().insert(userBlockUrl);
