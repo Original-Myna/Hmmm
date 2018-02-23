@@ -233,10 +233,12 @@ public class ContentBlocker56 implements ContentBlocker {
 
         if (userBlockUrls != null && userBlockUrls.size() > 0) {
             for (UserBlockUrl userBlockUrl : userBlockUrls) {
-                if (Patterns.WEB_URL.matcher(userBlockUrl.url).matches()) {
+                if (BlockUrlPatternsMatch.domainValid(userBlockUrl.url))
+                {
                     final String urlReady = "*" + userBlockUrl.url + "*";
                     denyList.add(urlReady);
-                }
+                } else if (BlockUrlPatternsMatch.wildcardValid(userBlockUrl.url))
+                    denyList.add(userBlockUrl.url);
             }
         }
         List<DomainFilterRule> rules = new ArrayList<>();
