@@ -197,11 +197,22 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        new AppUpdater(this)
-                .setTitleOnUpdateAvailable("Update available!")
-                .setUpdateFrom(UpdateFrom.GITHUB)
-                .setGitHubUserAndRepo("LayoutXML", "SABS")
-                .start();
+        if (blackTheme)
+        {
+            new AppUpdater(this)
+                    .setTitleOnUpdateAvailable("Update available!")
+                    .setUpdateFrom(UpdateFrom.GITHUB)
+                    .setGitHubUserAndRepo("LayoutXML", "SABS")
+                    .setDisplay(Display.SNACKBAR)
+                    .start();
+        } else
+        {
+            new AppUpdater(this)
+                    .setTitleOnUpdateAvailable("Update available!")
+                    .setUpdateFrom(UpdateFrom.GITHUB)
+                    .setGitHubUserAndRepo("LayoutXML", "SABS")
+                    .start();
+        }
 
         AsyncTask.execute(() -> {
             AdhellAppIntegrity adhellAppIntegrity = new AdhellAppIntegrity();
