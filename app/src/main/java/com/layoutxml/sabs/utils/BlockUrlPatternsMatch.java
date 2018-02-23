@@ -11,9 +11,8 @@ import java.util.regex.Pattern;
 
 public class BlockUrlPatternsMatch {
 
-
     public static boolean wildcardValid (String domain){
-        String wildcardPattern = "(?i)^([*]?)([A-Z0-9-_.]+)([*]?)$";
+        String wildcardPattern = "(?i)^([*])([A-Z0-9-_.]+)$|^([A-Z0-9-_.]+)([*])$|^([*])([A-Z0-9-_.]+)([*])$";
         Pattern r = Pattern.compile(wildcardPattern);
         Matcher m = r.matcher(domain);
         return m.matches();
