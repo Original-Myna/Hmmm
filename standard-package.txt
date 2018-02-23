@@ -25,6 +25,7 @@
 *thruport.com
 *tsyndicate.com
 *zenmxapps.com
+*.flurry.com
 006.free-counter.co.uk
 006.freecounters.co.uk
 0101011.com
@@ -3236,7 +3237,6 @@ dashboardnew.adcalls.nl
 dashgreen.online
 data.coremetrics.com
 data.eroadvertising.com
-data.flurry.com
 data.murdoog.com
 data.namesakeoscilloscopemarquis.com
 data.webads.co.nz
@@ -3868,7 +3868,6 @@ fls-na.amazon.com
 fls-na.amazon-adsystem.com
 flu23.com
 fluoxetine.1.p2l.info
-flurry.com
 flycast.com
 fmads.osdn.com
 fnlpic.com
