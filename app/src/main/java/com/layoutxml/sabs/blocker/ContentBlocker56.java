@@ -182,7 +182,7 @@ public class ContentBlocker56 implements ContentBlocker {
         }
 
         // Create our denyList array
-        List<String> denyList = new ArrayList<>();
+        Set<String> denySet = new HashSet<>();
         // Create a new BlockUrlProvider list and populate it with the selected lists in the DB
         List<BlockUrlProvider> blockUrlProviders = appDatabase.blockUrlProviderDao().getBlockUrlProviderBySelectedFlag(1);
 
@@ -212,7 +212,7 @@ public class ContentBlocker56 implements ContentBlocker {
                         continue;
                     }
                     // Otherwise add it to the deny list
-                    denyList.add(blockUrl.url);
+                    denySet.add(blockUrl.url);
                 } else {
                     // Remove www. www1. etc
                     blockUrl.url = blockUrl.url.replaceAll("^(www)([0-9]{0,3})?(\\.)", "");
@@ -224,7 +224,7 @@ public class ContentBlocker56 implements ContentBlocker {
                         continue;
                     }
                     // Otherwise add it to the deny list
-                    denyList.add("*" + blockUrl.url);
+                    denySet.add("*" + blockUrl.url);
                 }
             }
         }
@@ -236,11 +236,12 @@ public class ContentBlocker56 implements ContentBlocker {
                 if (BlockUrlPatternsMatch.domainValid(userBlockUrl.url))
                 {
                     final String urlReady = "*" + userBlockUrl.url + "*";
-                    denyList.add(urlReady);
+                    denySet.add(urlReady);
                 } else if (BlockUrlPatternsMatch.wildcardValid(userBlockUrl.url))
-                    denyList.add(userBlockUrl.url);
+                    denySet.add(userBlockUrl.url);
             }
         }
+        List<String> denyList = new ArrayList<>(denySet);
         List<DomainFilterRule> rules = new ArrayList<>();
         AppIdentity appIdentity = new AppIdentity("*", null);
         rules.add(new DomainFilterRule(appIdentity, denyList, new ArrayList<>()));
