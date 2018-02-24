@@ -38,8 +38,9 @@ public class AdhellAppIntegrity {
     private static final String FIREWALL_WHITELISTED_PACKAGES_MOVED = "adhell_firewall_whitelisted_packages_moved";
     private static final String MOVE_APP_PERMISSIONS = "adhell_app_permissions_moved";
     private static final String DEFAULT_PACKAGES_FIREWALL_WHITELISTED = "default_packages_firewall_whitelisted";
-    private static final String CHECK_ADHELL_STANDARD_PACKAGE = "adhell_adhell_standard_package";
+    private static final String CHECK_ADHELL_STANDARD_PACKAGE = "sabs_standard_package";
     private static final String ADHELL_STANDARD_PACKAGE = "https://raw.githubusercontent.com/LayoutXML/SABS/master/standard-package.txt";
+    private static final String SABS_MMOTTI_PACKAGE = "https://raw.githubusercontent.com/LayoutXML/SABS/master/standard-package-mmotti.txt";
     private static final String CHECK_PACKAGE_DB = "adhell_packages_filled_db";
 
     @Nullable
@@ -91,11 +92,11 @@ public class AdhellAppIntegrity {
             addDefaultAdblockWhitelist();
             sharedPreferences.edit().putBoolean(DEFAULT_PACKAGES_FIREWALL_WHITELISTED, true).apply();
         }
-        boolean adhellStandardPackageChecked = sharedPreferences.getBoolean(CHECK_ADHELL_STANDARD_PACKAGE, false);
-        if (!adhellStandardPackageChecked) {
+        //boolean adhellStandardPackageChecked = sharedPreferences.getBoolean(CHECK_ADHELL_STANDARD_PACKAGE, false);
+        //if (!adhellStandardPackageChecked) {
             checkAdhellStandardPackage();
-            sharedPreferences.edit().putBoolean(CHECK_ADHELL_STANDARD_PACKAGE, false).apply();
-        }
+            //sharedPreferences.edit().putBoolean(CHECK_ADHELL_STANDARD_PACKAGE, false).apply();
+        //}
         boolean packageDbFilled = sharedPreferences.getBoolean(CHECK_PACKAGE_DB, false);
         if (!packageDbFilled) {
             fillPackageDb();
@@ -222,30 +223,50 @@ public class AdhellAppIntegrity {
     }
 
     public void checkAdhellStandardPackage() {
-        BlockUrlProvider blockUrlProvider =
-                appDatabase.blockUrlProviderDao().getByUrl(ADHELL_STANDARD_PACKAGE);
-        if (blockUrlProvider != null) {
-            return;
+        //Standard Package
+        BlockUrlProvider blockUrlProvider = appDatabase.blockUrlProviderDao().getByUrl(ADHELL_STANDARD_PACKAGE);
+        if (blockUrlProvider == null) {
+            blockUrlProvider = new BlockUrlProvider();
+            blockUrlProvider.url = ADHELL_STANDARD_PACKAGE;
+            blockUrlProvider.lastUpdated = new Date();
+            blockUrlProvider.deletable = false;
+            blockUrlProvider.selected = true;
+            blockUrlProvider.policyPackageId = DEFAULT_POLICY_ID;
+            long ids[] = appDatabase.blockUrlProviderDao().insertAll(blockUrlProvider);
+            blockUrlProvider.id = ids[0];
+            List<BlockUrl> blockUrls;
+            try {
+                blockUrls = BlockUrlUtils.loadBlockUrls(blockUrlProvider);
+                blockUrlProvider.count = blockUrls.size();
+                Log.d(TAG, "Number of urls to insert: " + blockUrlProvider.count);
+                appDatabase.blockUrlProviderDao().updateBlockUrlProviders(blockUrlProvider);
+                appDatabase.blockUrlDao().insertAll(blockUrls);
+            } catch (IOException e) {
+                Log.e(TAG, "Failed to download urls", e);
+            }
         }
-        blockUrlProvider = new BlockUrlProvider();
-        blockUrlProvider.url = ADHELL_STANDARD_PACKAGE;
-        blockUrlProvider.lastUpdated = new Date();
-        blockUrlProvider.deletable = false;
-        blockUrlProvider.selected = true;
-        blockUrlProvider.policyPackageId = DEFAULT_POLICY_ID;
-        long ids[] = appDatabase.blockUrlProviderDao().insertAll(blockUrlProvider);
-        blockUrlProvider.id = ids[0];
-        List<BlockUrl> blockUrls;
-        try {
-            blockUrls = BlockUrlUtils.loadBlockUrls(blockUrlProvider);
-            blockUrlProvider.count = blockUrls.size();
-            Log.d(TAG, "Number of urls to insert: " + blockUrlProvider.count);
-            // Save url provider
-            appDatabase.blockUrlProviderDao().updateBlockUrlProviders(blockUrlProvider);
-            // Save urls from providers
-            appDatabase.blockUrlDao().insertAll(blockUrls);
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to download urls", e);
+
+        //mmotti's Package
+        AppDatabase mDb = AppDatabase.getAppDatabase(App.get().getApplicationContext());
+        BlockUrlProvider blockUrlProvider2 = appDatabase.blockUrlProviderDao().getByUrl(SABS_MMOTTI_PACKAGE);
+        if (blockUrlProvider2 == null) {
+            blockUrlProvider2 = new BlockUrlProvider();
+            blockUrlProvider2.url = SABS_MMOTTI_PACKAGE;
+            blockUrlProvider2.lastUpdated = new Date();
+            blockUrlProvider2.deletable = false;
+            blockUrlProvider2.selected = true;
+            blockUrlProvider2.policyPackageId = DEFAULT_POLICY_ID;
+            blockUrlProvider2.id = mDb.blockUrlProviderDao().insertAll(blockUrlProvider2)[0];
+            List<BlockUrl> blockUrls2;
+            try {
+                blockUrls2 = BlockUrlUtils.loadBlockUrls(blockUrlProvider2);
+                blockUrlProvider2.count = blockUrls2.size();
+                Log.d(TAG, "Number of urls to insert: " + blockUrlProvider2.count);
+                appDatabase.blockUrlProviderDao().updateBlockUrlProviders(blockUrlProvider2);
+                appDatabase.blockUrlDao().insertAll(blockUrls2);
+            } catch (IOException e) {
+                Log.e(TAG, "Failed to download urls", e);
+            }
         }
     }
 

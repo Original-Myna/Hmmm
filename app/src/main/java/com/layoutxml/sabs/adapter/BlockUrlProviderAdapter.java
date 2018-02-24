@@ -50,12 +50,20 @@ public class BlockUrlProviderAdapter extends ArrayAdapter<BlockUrlProvider> {
         deleteUrlImageView.setTag(position);
         if (blockUrlProvider != null) {
             Log.d(TAG, blockUrlProvider.url);
-            if (blockUrlProvider.url.equals(MainActivity.ADHELL_STANDARD_PACKAGE))
-                blockUrlProviderTextView.setText(R.string.standard_package_name);
-            else if (blockUrlProvider.url.equals(MainActivity.SABS_EXPERIMENTAL_PACKAGE))
-                blockUrlProviderTextView.setText(R.string.experimental_package);
-            else
-                blockUrlProviderTextView.setText(blockUrlProvider.url + "");
+            switch (blockUrlProvider.url) {
+                case MainActivity.ADHELL_STANDARD_PACKAGE:
+                    blockUrlProviderTextView.setText(R.string.standard_package_name);
+                    break;
+                case MainActivity.SABS_EXPERIMENTAL_PACKAGE:
+                    blockUrlProviderTextView.setText(R.string.experimental_package);
+                    break;
+                case MainActivity.SABS_MMOTTI_PACKAGE:
+                    blockUrlProviderTextView.setText(R.string.mmottis_package);
+                    break;
+                default:
+                    blockUrlProviderTextView.setText(blockUrlProvider.url + "");
+                    break;
+            }
             blockUrlCountTextView.setText(blockUrlProvider.count + "");
             urlProviderCheckBox.setChecked(blockUrlProvider.selected);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

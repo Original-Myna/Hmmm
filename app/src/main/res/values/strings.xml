@@ -165,4 +165,5 @@
     <string name="block_port_53_desc">Block Port 53 on Chrome (Stable, Canary, Beta, Dev) so that ads were blocked on these apps. After changing value, turn blocking off and on</string>
     <string name="miscblockall_desc">Block Port 53 in all apps (not recommended)</string>
     <string name="experimental_package">Experimental package</string>
+    <string name="mmottis_package">mmotti\'s package</string>
 </resources>
