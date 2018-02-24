@@ -98,9 +98,6 @@ public class BlockerFragment extends LifecycleFragment {
     @Override
     public void onStop() {
         super.onStop();
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
-        }
     }
 
     @Override
@@ -151,7 +148,7 @@ public class BlockerFragment extends LifecycleFragment {
             isSupportedTextView.setText(R.string.block_disabled);
         }
         mPolicyChangeButton.setOnClickListener(v -> {
-            Log.d(TAG, "Adhell switch button has been clicked");
+            Log.d(TAG, "PolicyChange: button");
             mPolicyChangeButton.setEnabled(false);
             if (!contentBlocker.isEnabled()) {
                 mPolicyChangeButton.setText(R.string.block_button_text_enabling);
