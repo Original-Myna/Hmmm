@@ -169,7 +169,7 @@ public class BlockerFragment extends LifecycleFragment {
                 reportButton.setVisibility(View.GONE);
                 dialog.setTitle(getString(R.string.disabling_sabs));
             }
-            String message = "Please wait. This may take a couple of minutes. Do leave SABS.";
+            String message = "Please wait. This may take a couple of minutes. Do not leave SABS.";
             SpannableString message2 =  new SpannableString(message);
             if (blackTheme)
                 message2.setSpan(new ForegroundColorSpan(Color.WHITE), 0, message2.length(), 0);
