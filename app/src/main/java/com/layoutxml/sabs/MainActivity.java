@@ -55,6 +55,7 @@ import java.util.Objects;
 
 import static com.layoutxml.sabs.Global.BlockPort53;
 import static com.layoutxml.sabs.Global.BlockPortAll;
+import static com.layoutxml.sabs.Global.BlockedUniqueUrls;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private AdhellTurnOnDialogFragment adhellTurnOnDialogFragment;
     private NoInternetConnectionDialogFragment noInternetConnectionDialogFragment;
     BottomNavigationView bottomNavigationView;
+    private static SharedPreferences sharedPreferences;
 
 
 
@@ -95,10 +97,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         Boolean blackTheme = sharedPreferences.getBoolean("blackTheme", false);
         BlockPort53 = sharedPreferences.getBoolean("blockPort53", true);
         BlockPortAll = sharedPreferences.getBoolean("blockPortAll", false);
+        if (BlockedUniqueUrls==0)
+            BlockedUniqueUrls = sharedPreferences.getInt("blockedUrls", 0);
         if (blackTheme)
             setTheme(R.style.BlackAppTheme);
         else
@@ -274,6 +278,14 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Destroying activity");
     }
 
+    public static void updateBlockCount() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (BlockedUniqueUrls!=0)
+        {
+            editor.putInt("blockedUrls", BlockedUniqueUrls);
+            editor.apply();
+        }
+    }
 
     public void showDialog() {
         if (!(DeviceAdminInteractor.isSamsung() && mAdminInteractor.isKnoxSupported())) {

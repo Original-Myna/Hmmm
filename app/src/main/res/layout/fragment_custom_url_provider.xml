@@ -63,9 +63,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/updateBlockUrlProvidersButton">
+        app:layout_constraintTop_toBottomOf="@+id/uniqueDomains">
 
     </ListView>
+
+    <TextView
+        android:id="@+id/uniqueDomains"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Blocked unique domains: 0. Note that you need to reapply blocking for the number to update."
+        android:textColor="#808080"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/updateBlockUrlProvidersButton" />
 
 
 </android.support.constraint.ConstraintLayout>

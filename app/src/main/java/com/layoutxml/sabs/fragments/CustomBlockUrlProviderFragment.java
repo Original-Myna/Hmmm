@@ -2,6 +2,8 @@ package com.layoutxml.sabs.fragments;
 
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.layoutxml.sabs.App;
@@ -32,6 +35,8 @@ import java.util.List;
 import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.layoutxml.sabs.Global.BlockedUniqueUrls;
 
 public class CustomBlockUrlProviderFragment extends LifecycleFragment {
 
@@ -55,7 +60,13 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
         blockUrlProviderEditText = view.findViewById(R.id.blockUrlProviderEditText);
         addBlockUrlProviderButton = view.findViewById(R.id.addBlockUrlProviderButton);
         blockListView = view.findViewById(R.id.blockUrlProviderListView);
+        TextView uniqueTextView = view.findViewById(R.id.uniqueDomains);
         Button updateBlockUrlProvidersButton = view.findViewById(R.id.updateBlockUrlProvidersButton);
+
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        if (BlockedUniqueUrls==0)
+        BlockedUniqueUrls = sharedPreferences.getInt("blockedUrls", 0);
+        uniqueTextView.setText("Blocked unique domains: "+BlockedUniqueUrls+". Note that you need to reapply blocking for the number to update.");
 
         ((MainActivity)getActivity()).hideBottomBar();
 
