@@ -16,9 +16,14 @@ import com.layoutxml.sabs.db.entity.BlockUrlProvider;
 import com.layoutxml.sabs.db.entity.DisabledPackage;
 import com.layoutxml.sabs.db.entity.FirewallWhitelistedPackage;
 import com.layoutxml.sabs.db.entity.PolicyPackage;
+import com.sec.enterprise.AppIdentity;
+import com.sec.enterprise.firewall.DomainFilterRule;
+import com.sec.enterprise.firewall.Firewall;
+import com.sec.enterprise.firewall.FirewallResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -32,10 +37,14 @@ public class AdhellAppIntegrity {
     private static final String DISABLED_PACKAGES_MOVED = "adhell_disabled_packages_moved";
     private static final String FIREWALL_WHITELISTED_PACKAGES_MOVED = "adhell_firewall_whitelisted_packages_moved";
     private static final String MOVE_APP_PERMISSIONS = "adhell_app_permissions_moved";
-    private static final String DEFAULT_PACKAGES_FIREWALL_WHITELISTED = "adhell_default_packages_firewall_whitelisted";
+    private static final String DEFAULT_PACKAGES_FIREWALL_WHITELISTED = "default_packages_firewall_whitelisted";
     private static final String CHECK_ADHELL_STANDARD_PACKAGE = "adhell_adhell_standard_package";
     private static final String ADHELL_STANDARD_PACKAGE = "https://raw.githubusercontent.com/LayoutXML/SABS/master/standard-package.txt";
     private static final String CHECK_PACKAGE_DB = "adhell_packages_filled_db";
+
+    @Nullable
+    @Inject
+    Firewall firewall;
 
     @Inject
     AppDatabase appDatabase;
@@ -191,11 +200,25 @@ public class AdhellAppIntegrity {
     }
 
     private void addDefaultAdblockWhitelist() {
-        List<FirewallWhitelistedPackage> firewallWhitelistedPackages = new ArrayList<>();
-        firewallWhitelistedPackages.add(new FirewallWhitelistedPackage("com.google.android.music", DEFAULT_POLICY_ID));
-        firewallWhitelistedPackages.add(new FirewallWhitelistedPackage("com.google.android.apps.fireball", DEFAULT_POLICY_ID)); //allo
-        firewallWhitelistedPackages.add(new FirewallWhitelistedPackage("com.google.android.apps.tachyon", DEFAULT_POLICY_ID)); //duo
-        appDatabase.firewallWhitelistedPackageDao().insertAll(firewallWhitelistedPackages);
+        List<String> firewallWhitelistedPackages = new ArrayList<>(Arrays.asList("com.google.android.music", "com.google.android.apps.fireball", "com.google.android.apps.tachyon"));
+        //Google Music, Google Allo, Google Duo
+        for (String app : firewallWhitelistedPackages) {
+            List<DomainFilterRule> rules = new ArrayList<>();
+            List<String> superAllow = new ArrayList<>();
+            superAllow.add("*");
+            rules.add(new DomainFilterRule(new AppIdentity(app, null), new ArrayList<>(), superAllow));
+            try {
+                if (firewall!=null && firewall.isFirewallEnabled()) {
+                    FirewallResponse[] response = null;
+                    response = firewall.addDomainFilterRules(rules);
+                    if (response[0].getResult() == FirewallResponse.Result.SUCCESS) {
+                        Log.d(TAG, "Firewall app rules whitelist updated successfully");
+                    }
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to remove filter rule");
+            }
+        }
     }
 
     public void checkAdhellStandardPackage() {

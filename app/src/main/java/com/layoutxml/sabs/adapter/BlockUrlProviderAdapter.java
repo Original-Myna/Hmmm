@@ -52,6 +52,8 @@ public class BlockUrlProviderAdapter extends ArrayAdapter<BlockUrlProvider> {
             Log.d(TAG, blockUrlProvider.url);
             if (blockUrlProvider.url.equals(MainActivity.ADHELL_STANDARD_PACKAGE))
                 blockUrlProviderTextView.setText(R.string.standard_package_name);
+            else if (blockUrlProvider.url.equals(MainActivity.SABS_EXPERIMENTAL_PACKAGE))
+                blockUrlProviderTextView.setText(R.string.experimental_package);
             else
                 blockUrlProviderTextView.setText(blockUrlProvider.url + "");
             blockUrlCountTextView.setText(blockUrlProvider.count + "");
