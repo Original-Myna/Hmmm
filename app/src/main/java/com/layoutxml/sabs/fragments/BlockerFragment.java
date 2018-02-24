@@ -1,6 +1,9 @@
 package com.layoutxml.sabs.fragments;
 
+import android.app.ProgressDialog;
 import android.arch.lifecycle.LifecycleFragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +12,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,6 +49,7 @@ public class BlockerFragment extends LifecycleFragment {
     private CompositeDisposable disposable = new CompositeDisposable();
     private Button mPolicyChangeButton;
     private TextView isSupportedTextView;
+    private ProgressDialog dialog;
     private ContentBlocker contentBlocker;
     private final Observable<Boolean> toggleAdhellSwitchObservable = Observable.create(emitter -> {
         try {
@@ -127,9 +133,12 @@ public class BlockerFragment extends LifecycleFragment {
             parentActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             parentActivity.getSupportActionBar().setHomeButtonEnabled(false);
         }
-
-        int a=0;
-        int b=0;
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Boolean blackTheme = sharedPreferences.getBoolean("blackTheme", false);
+        if (blackTheme)
+            dialog = new ProgressDialog(getActivity(), R.style.BlackAppThemeDialog);
+        else
+            dialog = new ProgressDialog(getActivity(), R.style.MainAppThemeDialog);
         mPolicyChangeButton = view.findViewById(R.id.policyChangeButton);
         isSupportedTextView = view.findViewById(R.id.isSupportedTextView);
         reportButton = view.findViewById(R.id.adhellReportsButton);
@@ -153,11 +162,21 @@ public class BlockerFragment extends LifecycleFragment {
             if (!contentBlocker.isEnabled()) {
                 mPolicyChangeButton.setText(R.string.block_button_text_enabling);
                 isSupportedTextView.setText(getString(R.string.enabling_sabs));
+                dialog.setTitle(getString(R.string.enabling_sabs));
             } else {
                 mPolicyChangeButton.setText(R.string.block_button_text_disabling);
                 isSupportedTextView.setText(getString(R.string.disabling_sabs));
                 reportButton.setVisibility(View.GONE);
+                dialog.setTitle(getString(R.string.disabling_sabs));
             }
+            String message = "Please wait. This may take a couple of minutes. Do leave SABS.";
+            SpannableString message2 =  new SpannableString(message);
+            if (blackTheme)
+                message2.setSpan(new ForegroundColorSpan(Color.WHITE), 0, message2.length(), 0);
+            dialog.setMessage(message2);
+            dialog.setIndeterminate(true);
+            dialog.setCancelable(false);
+            dialog.show();
             Disposable subscribe = toggleAdhellSwitchObservable
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
@@ -185,17 +204,20 @@ public class BlockerFragment extends LifecycleFragment {
 
     private void updateUserInterface() {
         Log.d(TAG, "Enterting onPostExecute() method");
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
         if (contentBlocker.isEnabled()) {
             mPolicyChangeButton.setText(R.string.block_button_text_turn_off);
             isSupportedTextView.setText(R.string.block_enabled);
-            Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), getString(R.string.block_enabled), Snackbar.LENGTH_SHORT);
+            Snackbar mySnackbar = Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(android.R.id.content), getString(R.string.block_enabled), Snackbar.LENGTH_SHORT);
             mySnackbar.setAction(R.string.block_button_text_turn_off, new mPolicyChangeButtonPress());
             mySnackbar.setActionTextColor(Color.YELLOW).show();
             mySnackbar.show();
         } else {
             mPolicyChangeButton.setText(R.string.block_button_text_turn_on);
             isSupportedTextView.setText(R.string.block_disabled);
-            Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), getString(R.string.block_disabled), Snackbar.LENGTH_SHORT);
+            Snackbar mySnackbar = Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(android.R.id.content), getString(R.string.block_disabled), Snackbar.LENGTH_SHORT);
             mySnackbar.setAction(R.string.block_button_text_turn_on, new mPolicyChangeButtonPress());
             mySnackbar.setActionTextColor(Color.YELLOW).show();
             mySnackbar.show();
