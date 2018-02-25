@@ -2,7 +2,6 @@ package com.layoutxml.sabs.utils;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.webkit.URLUtil;
 
 import com.layoutxml.sabs.db.entity.BlockUrl;
 import com.layoutxml.sabs.db.entity.BlockUrlProvider;
@@ -24,24 +23,72 @@ public class BlockUrlUtils {
         URLConnection connection = urlProviderUrl.openConnection();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         List<BlockUrl> blockUrls = new ArrayList<>();
+
         String inputLine;
+
         while ((inputLine = bufferedReader.readLine()) != null) {
-            Log.d(TAG, "Url: " + inputLine);
+
+            // Let's run some string replacements
             inputLine = inputLine
+
+                    // Remove 'deadzone' - We only want the domain
                     .replace("127.0.0.1", "")
                     .replace("0.0.0.0", "")
+
+                    // Remove whitespace
+                    .replaceAll("\\s","")
+
+                    // Remove comments
+                    .replaceAll("(#.*)|((\\s)+#.*)","")
+
+                    // Remove WWW, WWW1 etc. prefix
+                    .replaceAll("^(www)([0-9]{0,3})?(\\.)","")
+
                     .trim()
                     .toLowerCase();
-            int hIndex = inputLine.indexOf("#");
-            if (hIndex != -1) {
-                inputLine = inputLine.substring(0, hIndex).trim();
-            }
 
-            if (URLUtil.isValidUrl("http://" + inputLine)) {
+            /* Move on to domain validation */
+
+            // If we have a wildcard
+            if (inputLine.contains("*")) {
+
+                // Pass it for validation
+                boolean validWildcard = BlockUrlPatternsMatch.wildcardValid(inputLine);
+
+                // If it's not a valid wildcard
+                if (!validWildcard) {
+                    // Debug output
+                    Log.d(TAG, "Invalid Wildcard: " + inputLine);
+                    // Skip to the next block url
+                    continue;
+                }
+
+                Log.i(TAG, "Wildcard found: " + inputLine);
+
+                // Otherwise add it to the deny list
+                BlockUrl blockUrl = new BlockUrl(inputLine, blockUrlProvider.id);
+                blockUrls.add(blockUrl);
+
+            // else if it's a standard domain
+            } else {
+                // Pass it for validation
+                boolean validDomain = BlockUrlPatternsMatch.domainValid(inputLine);
+                // If it's not a valid domain
+                if (!validDomain) {
+                    // Debug output
+                    Log.d(TAG, "Invalid Domain: " + inputLine);
+                    // Skip to the next block url
+                    continue;
+                }
+
+                Log.i(TAG, "Domain found: " + inputLine);
+
+                // Otherwise add it to the deny list
                 BlockUrl blockUrl = new BlockUrl(inputLine, blockUrlProvider.id);
                 blockUrls.add(blockUrl);
             }
         }
+
         bufferedReader.close();
         return blockUrls;
     }

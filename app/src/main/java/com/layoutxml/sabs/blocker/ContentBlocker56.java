@@ -187,6 +187,8 @@ public class ContentBlocker56 implements ContentBlocker {
         // Create a new BlockUrlProvider list and populate it with the selected lists in the DB
         List<BlockUrlProvider> blockUrlProviders = appDatabase.blockUrlProviderDao().getBlockUrlProviderBySelectedFlag(1);
 
+        Log.i(TAG, "Adding SABS domain filter rules...");
+
         // For each block provider
         for (BlockUrlProvider blockUrlProvider : blockUrlProviders) {
             // Get the domains for the given list
@@ -205,26 +207,10 @@ public class ContentBlocker56 implements ContentBlocker {
 
                 // If we have a wildcard
                 if (blockUrl.url.contains("*")) {
-                    // Pass it for validation
-                    boolean validWildcard = BlockUrlPatternsMatch.wildcardValid(blockUrl.url);
-                    // If it's not a valid wildcard
-                    if (!validWildcard) {
-                        // Skip to the next block url
-                        continue;
-                    }
-                    // Otherwise add it to the deny list
+                    // Add it exactly how it is
                     denySet.add(blockUrl.url);
                 } else {
-                    // Remove www. www1. etc
-                    blockUrl.url = blockUrl.url.replaceAll("^(www)([0-9]{0,3})?(\\.)", "");
-                    // Pass it for validation
-                    boolean validDomain = BlockUrlPatternsMatch.domainValid(blockUrl.url);
-                    // If it's not a valid domain
-                    if (!validDomain) {
-                        // Skip to the next block url
-                        continue;
-                    }
-                    // Otherwise add it to the deny list
+                    // Otherwise append a leading *
                     denySet.add("*" + blockUrl.url);
                 }
             }
@@ -279,6 +265,7 @@ public class ContentBlocker56 implements ContentBlocker {
     public boolean disableBlocker() {
         FirewallResponse[] response;
         try {
+            Log.i(TAG, "Clearing SABS firewall rules...");
             response = mFirewall.clearRules(Firewall.FIREWALL_ALL_RULES);
             response = mFirewall.removeDomainFilterRules(DomainFilterRule.CLEAR_ALL);
             if (mFirewall.isFirewallEnabled()) {
