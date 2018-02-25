@@ -2,17 +2,14 @@
 # https://raw.githubusercontent.com/LayoutXML/SABS/master/standard-package-experimental.txt
 *.adtech.*
 *.adtechus.*
-*.cloudfront.net
 *.cricbuzz.com
 *.date
 *.flurry.com
 *.googlezip.net
-*.llnwd.net
 *.sam4m.com
 *.sitemeter.com
 *.startappnetwork.com
 *.yimg.com
-*.ytimg.com
 *.zenmxapps.com
 *1e100.net
 *2mdn.net
