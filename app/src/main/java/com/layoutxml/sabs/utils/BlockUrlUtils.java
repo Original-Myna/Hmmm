@@ -22,10 +22,7 @@ public class BlockUrlUtils {
         URL urlProviderUrl = new URL(blockUrlProvider.url);
         URLConnection connection = urlProviderUrl.openConnection();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-        List<String> preProcessedList = new ArrayList<>();
         List<BlockUrl> blockUrls = new ArrayList<>();
-
 
         String inputLine;
 
