@@ -2,7 +2,6 @@ package com.layoutxml.sabs.utils;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.webkit.URLUtil;
 
 import com.layoutxml.sabs.db.entity.BlockUrl;
 import com.layoutxml.sabs.db.entity.BlockUrlProvider;
@@ -13,7 +12,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class BlockUrlUtils {
