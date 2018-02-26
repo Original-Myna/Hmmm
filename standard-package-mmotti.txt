@@ -944,6 +944,7 @@ adsearch.pl
 adsearch.wp.pl
 adsearch.www1.biz
 adsend.de
+adsensecustomsearchads.com
 adsentnetwork.com
 adserer.ihigh.com
 adserv.*
@@ -3329,6 +3330,7 @@ detox-kit.com
 detroithardcore.com
 dev.adforum.com
 dev.sfbg.com
+dev.visualwebsiteoptimizer.com
 devart.adbureau.net
 devis-abri-de-piscine.fr
 devlp1.linkpulse.com
@@ -4775,6 +4777,7 @@ impgb.tradedoubler.com
 impie.tradedoubler.com
 impit.tradedouble.com
 impit.tradedoubler.com
+impl.onscroll.com
 impnl.tradedoubler.com
 impno.tradedoubler.com
 import.globalsources.com
@@ -8297,6 +8300,7 @@ tags.bkrtx.com
 tags.bluekai.com
 tags.expo9.exponential.com
 tags.hypeads.org
+tags.onscroll.com
 tags.rllcll.com
 tags.tagcade.com
 tags.toroadvertising.com
@@ -9059,6 +9063,7 @@ visit.webhosting.yahoo.com
 visitbox.de
 visual-pagerank.fr
 visualrevenue.com
+visualwebsiteoptimizer.com
 vitalitymax.1.p2l.info
 vk.18sexporn.ru
 vmcsatellite.com
