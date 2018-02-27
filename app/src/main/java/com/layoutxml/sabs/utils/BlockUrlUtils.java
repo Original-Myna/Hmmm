@@ -7,6 +7,8 @@ import com.layoutxml.sabs.db.entity.BlockUrl;
 import com.layoutxml.sabs.db.entity.BlockUrlProvider;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -19,9 +21,33 @@ public class BlockUrlUtils {
 
     @NonNull
     public static List<BlockUrl> loadBlockUrls(BlockUrlProvider blockUrlProvider) throws IOException {
-        URL urlProviderUrl = new URL(blockUrlProvider.url);
-        URLConnection connection = urlProviderUrl.openConnection();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+        // Local host directory for conditional check
+        String localhostDir = "/SABS/Hosts/";
+
+        // Create a BufferedReader object outside of the if statements
+        BufferedReader bufferedReader;
+
+        // If we are processing a local host file
+        if(blockUrlProvider.url.contains(localhostDir))
+        {
+            // Create a new file object
+            File localhostFile = new File(blockUrlProvider.url);
+
+            // Create a file input stream of the host file
+            FileInputStream fileInputStream = new FileInputStream(localhostFile);
+
+            // Create a buffered reader for the local host file
+            bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
+        }
+        else
+        {
+            URL urlProviderUrl = new URL(blockUrlProvider.url);
+            URLConnection connection = urlProviderUrl.openConnection();
+            bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        }
+
+
         List<BlockUrl> blockUrls = new ArrayList<>();
 
         String inputLine;
@@ -90,6 +116,7 @@ public class BlockUrlUtils {
         }
 
         bufferedReader.close();
+
         return blockUrls;
     }
 }
