@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.Patterns;
@@ -28,9 +29,12 @@ import com.layoutxml.sabs.db.entity.BlockUrlProvider;
 import com.layoutxml.sabs.utils.BlockUrlUtils;
 import com.layoutxml.sabs.viewmodel.BlockUrlProvidersViewModel;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -96,8 +100,60 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
         });
         addBlockUrlProviderButton.setOnClickListener(v -> {
             String urlProvider = blockUrlProviderEditText.getText().toString();
+
+            // Validation for checking whether a local file has been entered
+            String localpathPattern = "(?i)^([A-Z0-9-_.]+)([.]txt)$";
+            Pattern r = Pattern.compile(localpathPattern);
+            Matcher m = r.matcher(urlProvider);
+
+            // If a value has been entered and matches our local host file regex
+
+            if (!urlProvider.isEmpty() && m.matches()) {
+
+                // Construct the local path
+                String localfilePath = Environment.getExternalStorageDirectory() + "/SABS/Hosts/" + urlProvider;
+
+                // Create a new file object for verifying
+                File localhostFile = new File(localfilePath);
+
+                // If the file exists
+                if(localhostFile.exists())
+                {
+                    Log.d(TAG, "Local host file detected: " + localfilePath);
+
+                    Maybe.fromCallable(() -> {
+                        BlockUrlProvider blockUrlProvider = new BlockUrlProvider();
+                        blockUrlProvider.url = localfilePath;
+                        blockUrlProvider.count = 0;
+                        blockUrlProvider.deletable = true;
+                        blockUrlProvider.lastUpdated = new Date();
+                        blockUrlProvider.selected = false;
+                        blockUrlProvider.id = mDb.blockUrlProviderDao().insertAll(blockUrlProvider)[0];
+                        // Try to download and parse urls
+                        try {
+                            List<BlockUrl> blockUrls = BlockUrlUtils.loadBlockUrls(blockUrlProvider);
+                            blockUrlProvider.count = blockUrls.size();
+                            Log.d(TAG, "Number of urls to insert: " + blockUrlProvider.count);
+                            // Save url provider
+                            mDb.blockUrlProviderDao().updateBlockUrlProviders(blockUrlProvider);
+                            // Save urls from providers
+                            mDb.blockUrlDao().insertAll(blockUrls);
+                        } catch (IOException e) {
+                            Log.e(TAG, "Failed to download links from urlproviders", e);
+                        }
+
+                        return null;
+                    })
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe();
+                    blockUrlProviderEditText.setText("");
+
+
+                }
+            }
             // Check if normal url
-            if (!urlProvider.isEmpty() && Patterns.WEB_URL.matcher(urlProvider).matches()) {
+            else if (!urlProvider.isEmpty() && Patterns.WEB_URL.matcher(urlProvider).matches()) {
                 Maybe.fromCallable(() -> {
                     BlockUrlProvider blockUrlProvider = new BlockUrlProvider();
                     blockUrlProvider.url = (URLUtil.isValidUrl(urlProvider)) ? urlProvider : "http://" + urlProvider;
