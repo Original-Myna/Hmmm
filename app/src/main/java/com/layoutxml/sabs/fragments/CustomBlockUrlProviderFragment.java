@@ -102,7 +102,7 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
             String urlProvider = blockUrlProviderEditText.getText().toString();
 
             // Validation for checking whether a local file has been entered
-            String localpathPattern = "(?i)^([A-Z0-9-_.]+)([.]txt)$";
+            String localpathPattern = "(?i)^([/]storage[/])([A-Z0-9-_./]+)([.]txt)$|^([/]sdcard[0-9]?[/])([A-Z0-9-_./]+)([.]txt)$";
             Pattern r = Pattern.compile(localpathPattern);
             Matcher m = r.matcher(urlProvider);
 
@@ -111,7 +111,7 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
             if (!urlProvider.isEmpty() && m.matches()) {
 
                 // Construct the local path
-                String localfilePath = Environment.getExternalStorageDirectory() + "/SABS/Hosts/" + urlProvider;
+                String localfilePath = urlProvider;
 
                 // Create a new file object for verifying
                 File localhostFile = new File(localfilePath);
@@ -148,8 +148,10 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe();
                     blockUrlProviderEditText.setText("");
-
-
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "Host file not found.", Toast.LENGTH_LONG).show();
                 }
             }
             // Check if normal url
