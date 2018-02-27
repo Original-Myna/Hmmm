@@ -23,13 +23,13 @@ public class BlockUrlUtils {
     public static List<BlockUrl> loadBlockUrls(BlockUrlProvider blockUrlProvider) throws IOException {
 
         // Local host directory for conditional check
-        String localhostDir = "/SABS/Hosts/";
+        String localhostDir = "/";
 
         // Create a BufferedReader object outside of the if statements
         BufferedReader bufferedReader;
 
         // If we are processing a local host file
-        if(blockUrlProvider.url.contains(localhostDir))
+        if(blockUrlProvider.url.startsWith(localhostDir))
         {
             // Create a new file object
             File localhostFile = new File(blockUrlProvider.url);
