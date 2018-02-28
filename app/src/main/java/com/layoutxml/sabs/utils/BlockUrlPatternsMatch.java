@@ -25,4 +25,12 @@ public class BlockUrlPatternsMatch {
         return m.matches();
     }
 
+    public static boolean filepathValid (String filePath) {
+        // Validation for checking whether a local file has been entered
+        String filePathPattern = "(?i)^([/]storage[/])([A-Z0-9-_./]+)([.]txt)$|^([/]sdcard[0-9]?[/])([A-Z0-9-_./]+)([.]txt)$";
+        Pattern r = Pattern.compile(filePathPattern);
+        Matcher m = r.matcher(filePath);
+        return m.matches();
+    }
+
 }
