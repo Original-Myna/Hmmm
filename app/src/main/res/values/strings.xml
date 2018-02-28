@@ -65,7 +65,7 @@
     <string name="app_list_sorted_by_alphabet">Sorted alphabetically</string>
     <string name="subscribe">Subscribe for {{price}} per month</string>
     <string name="subscribe_three_month">Subscribe for {{price}} per 3 month with 20% discount</string>
-    <string name="subscribeInfo">You can add more domain (host) list URLs. It must only include domain names and comments in lines starting with #. Other lines may break SABS. After adding a URL, updating a file or (un)checking a box, turn blocking off then on.</string>
+    <string name="subscribeInfo">You can add more domain (host) list URLs. It must only include domain names and comments in lines starting with #. Other lines may break SABS. After adding an URL, updating a file or (un)checking a box, turn blocking off then on.</string>
     <string name="ads_example_com" translatable="false">example.com</string>
     <string name="your_device_running_old_knox_version">Your device is running an old version of KNOX. Upgrade your device or perform an update. Otherwise, you may experience crashes on certain functions.</string>
     <string name="adblock_whitelist">Whitelisted Apps</string>
