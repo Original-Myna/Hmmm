@@ -1,16 +1,20 @@
 package com.layoutxml.sabs.fragments;
 
+import android.app.ProgressDialog;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -55,6 +59,7 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
     private EditText blockUrlProviderEditText;
     private Button addBlockUrlProviderButton;
     private ListView blockListView;
+    private ProgressDialog dialogLoading;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -117,6 +122,15 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String urlProvider = input.getText().toString();
+                        dialogLoading = new ProgressDialog(getActivity(), R.style.BlackAppThemeDialog);
+                        String message = "Please wait. This may take a couple of minutes. Do not leave SABS.";
+                        SpannableString message2 =  new SpannableString(message);
+                        dialogLoading.setTitle("Adding custom provider");
+                        message2.setSpan(new ForegroundColorSpan(Color.WHITE), 0, message2.length(), 0);
+                        dialogLoading.setMessage(message2);
+                        dialogLoading.setIndeterminate(true);
+                        dialogLoading.setCancelable(false);
+                        dialogLoading.show();
                         AddCustomProvider(urlProvider);
                     }
                 });
@@ -139,6 +153,14 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String urlProvider = input.getText().toString();
+                        dialogLoading = new ProgressDialog(getActivity(), R.style.MainAppThemeDialog);
+                        String message = "Please wait. This may take a couple of minutes. Do not leave SABS.";
+                        SpannableString message2 =  new SpannableString(message);
+                        dialogLoading.setTitle("Adding custom provider");
+                        dialogLoading.setMessage(message2);
+                        dialogLoading.setIndeterminate(true);
+                        dialogLoading.setCancelable(false);
+                        dialogLoading.show();
                         AddCustomProvider(urlProvider);
                     }
                 });
@@ -185,7 +207,7 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
                     blockUrlProvider.count = 0;
                     blockUrlProvider.deletable = true;
                     blockUrlProvider.lastUpdated = new Date();
-                    blockUrlProvider.selected = false;
+                    blockUrlProvider.selected = true;
                     blockUrlProvider.id = mDb.blockUrlProviderDao().insertAll(blockUrlProvider)[0];
                     // Try to download and parse urls
                     try {
@@ -199,7 +221,9 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
                     } catch (IOException e) {
                         Log.e(TAG, "Failed to download links from urlproviders", e);
                     }
-
+                    if (dialogLoading.isShowing()) {
+                        dialogLoading.dismiss();
+                    }
                     return null;
                 })
                         .subscribeOn(Schedulers.io())
@@ -219,7 +243,7 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
                 blockUrlProvider.count = 0;
                 blockUrlProvider.deletable = true;
                 blockUrlProvider.lastUpdated = new Date();
-                blockUrlProvider.selected = false;
+                blockUrlProvider.selected = true;
                 blockUrlProvider.id = mDb.blockUrlProviderDao().insertAll(blockUrlProvider)[0];
                 // Try to download and parse urls
                 try {
@@ -233,7 +257,9 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
                 } catch (IOException e) {
                     Log.e(TAG, "Failed to download links from urlproviders", e);
                 }
-
+                if (dialogLoading.isShowing()) {
+                    dialogLoading.dismiss();
+                }
                 return null;
             })
                     .subscribeOn(Schedulers.io())
