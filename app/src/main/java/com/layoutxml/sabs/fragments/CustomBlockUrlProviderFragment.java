@@ -3,10 +3,14 @@ package com.layoutxml.sabs.fragments;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -34,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,15 +67,15 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_custom_url_provider, container, false);
         getActivity().setTitle(R.string.subscribe_to_providers);
-        blockUrlProviderEditText = view.findViewById(R.id.blockUrlProviderEditText);
         addBlockUrlProviderButton = view.findViewById(R.id.addBlockUrlProviderButton);
         blockListView = view.findViewById(R.id.blockUrlProviderListView);
         TextView uniqueTextView = view.findViewById(R.id.uniqueDomains);
         Button updateBlockUrlProvidersButton = view.findViewById(R.id.updateBlockUrlProvidersButton);
 
         SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        Boolean blackTheme = sharedPreferences.getBoolean("blackTheme", false);
         if (BlockedUniqueUrls==0)
-        BlockedUniqueUrls = sharedPreferences.getInt("blockedUrls", 0);
+            BlockedUniqueUrls = sharedPreferences.getInt("blockedUrls", 0);
         uniqueTextView.setText("Blocked unique domains: "+BlockedUniqueUrls+". Note that you need to reapply blocking for the number to update.");
 
         ((MainActivity)getActivity()).hideBottomBar();
@@ -100,63 +105,83 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
 
         });
         addBlockUrlProviderButton.setOnClickListener(v -> {
-            String urlProvider = blockUrlProviderEditText.getText().toString();
-
-            // Check whether the file path is valid
-            boolean validFilePath = BlockUrlPatternsMatch.filepathValid(urlProvider);
-
-            // If a value has been entered and matches our local host file regex
-            if (!urlProvider.isEmpty() && validFilePath) {
-
-                // Construct the local path
-                String localfilePath = urlProvider;
-
-                // Create a new file object for verifying
-                File localhostFile = new File(localfilePath);
-
-                // If the file exists
-                if(localhostFile.exists())
-                {
-                    Log.d(TAG, "Local host file detected: " + localfilePath);
-
-                    Maybe.fromCallable(() -> {
-                        BlockUrlProvider blockUrlProvider = new BlockUrlProvider();
-                        blockUrlProvider.url = localfilePath;
-                        blockUrlProvider.count = 0;
-                        blockUrlProvider.deletable = true;
-                        blockUrlProvider.lastUpdated = new Date();
-                        blockUrlProvider.selected = false;
-                        blockUrlProvider.id = mDb.blockUrlProviderDao().insertAll(blockUrlProvider)[0];
-                        // Try to download and parse urls
-                        try {
-                            List<BlockUrl> blockUrls = BlockUrlUtils.loadBlockUrls(blockUrlProvider);
-                            blockUrlProvider.count = blockUrls.size();
-                            Log.d(TAG, "Number of urls to insert: " + blockUrlProvider.count);
-                            // Save url provider
-                            mDb.blockUrlProviderDao().updateBlockUrlProviders(blockUrlProvider);
-                            // Save urls from providers
-                            mDb.blockUrlDao().insertAll(blockUrls);
-                        } catch (IOException e) {
-                            Log.e(TAG, "Failed to download links from urlproviders", e);
-                        }
-
-                        return null;
-                    })
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe();
-                    blockUrlProviderEditText.setText("");
-                }
-                else
-                {
-                    Toast.makeText(getContext(), "Host file not found.", Toast.LENGTH_LONG).show();
-                }
+            if(blackTheme)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()), R.style.BlackAppThemeDialog);
+                builder.setTitle("Choose a provider");
+                builder.setMessage("Add domain (host) list. This can be a URL or file location.");
+                final EditText input = new EditText(getContext());
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+                builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String urlProvider = input.getText().toString();
+                        AddCustomProvider(urlProvider);
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            } else
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()), R.style.MainAppThemeDialog);
+                builder.setTitle("Choose a provider");
+                builder.setMessage("Add domain (host) list. This can be a URL or file location.");
+                final EditText input = new EditText(getContext());
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+                builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String urlProvider = input.getText().toString();
+                        AddCustomProvider(urlProvider);
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
             }
-            // Check if normal url
-            else if (!urlProvider.isEmpty() && Patterns.WEB_URL.matcher(urlProvider).matches()) {
+        });
+
+        BlockUrlProvidersViewModel model = ViewModelProviders.of(getActivity()).get(BlockUrlProvidersViewModel.class);
+        model.getBlockUrlProviders().observe(this, blockUrlProviders -> {
+            BlockUrlProviderAdapter adapter = new BlockUrlProviderAdapter(this.getContext(), blockUrlProviders);
+            blockListView.setAdapter(adapter);
+        });
+
+        return view;
+    }
+
+    private void AddCustomProvider(String urlProvider){
+        // Check whether the file path is valid
+        boolean validFilePath = BlockUrlPatternsMatch.filepathValid(urlProvider);
+
+        // If a value has been entered and matches our local host file regex
+        if (!urlProvider.isEmpty() && validFilePath) {
+
+            // Construct the local path
+            String localfilePath = urlProvider;
+
+            // Create a new file object for verifying
+            File localhostFile = new File(localfilePath);
+
+            // If the file exists
+            if(localhostFile.exists())
+            {
+                Log.d(TAG, "Local host file detected: " + localfilePath);
+
                 Maybe.fromCallable(() -> {
                     BlockUrlProvider blockUrlProvider = new BlockUrlProvider();
-                    blockUrlProvider.url = (URLUtil.isValidUrl(urlProvider)) ? urlProvider : "http://" + urlProvider;
+                    blockUrlProvider.url = localfilePath;
                     blockUrlProvider.count = 0;
                     blockUrlProvider.deletable = true;
                     blockUrlProvider.lastUpdated = new Date();
@@ -180,18 +205,42 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe();
-                blockUrlProviderEditText.setText("");
-            } else {
-                Toast.makeText(getContext(), "Url is invalid", Toast.LENGTH_LONG).show();
             }
-        });
+            else
+            {
+                Toast.makeText(getContext(), "Host file not found.", Toast.LENGTH_LONG).show();
+            }
+        }
+        // Check if normal url
+        else if (!urlProvider.isEmpty() && Patterns.WEB_URL.matcher(urlProvider).matches()) {
+            Maybe.fromCallable(() -> {
+                BlockUrlProvider blockUrlProvider = new BlockUrlProvider();
+                blockUrlProvider.url = (URLUtil.isValidUrl(urlProvider)) ? urlProvider : "http://" + urlProvider;
+                blockUrlProvider.count = 0;
+                blockUrlProvider.deletable = true;
+                blockUrlProvider.lastUpdated = new Date();
+                blockUrlProvider.selected = false;
+                blockUrlProvider.id = mDb.blockUrlProviderDao().insertAll(blockUrlProvider)[0];
+                // Try to download and parse urls
+                try {
+                    List<BlockUrl> blockUrls = BlockUrlUtils.loadBlockUrls(blockUrlProvider);
+                    blockUrlProvider.count = blockUrls.size();
+                    Log.d(TAG, "Number of urls to insert: " + blockUrlProvider.count);
+                    // Save url provider
+                    mDb.blockUrlProviderDao().updateBlockUrlProviders(blockUrlProvider);
+                    // Save urls from providers
+                    mDb.blockUrlDao().insertAll(blockUrls);
+                } catch (IOException e) {
+                    Log.e(TAG, "Failed to download links from urlproviders", e);
+                }
 
-        BlockUrlProvidersViewModel model = ViewModelProviders.of(getActivity()).get(BlockUrlProvidersViewModel.class);
-        model.getBlockUrlProviders().observe(this, blockUrlProviders -> {
-            BlockUrlProviderAdapter adapter = new BlockUrlProviderAdapter(this.getContext(), blockUrlProviders);
-            blockListView.setAdapter(adapter);
-        });
-
-        return view;
+                return null;
+            })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe();
+        } else {
+            Toast.makeText(getContext(), "Url is invalid", Toast.LENGTH_LONG).show();
+        }
     }
 }
