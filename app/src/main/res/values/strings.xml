@@ -54,7 +54,7 @@
         Well, I\'m not even in the college yet.
         \nWould be nice to have a spare dollar in the future.
     </string>
-    <string name="add_provider">Add</string>
+    <string name="add_provider">Add new</string>
     <string name="error_reading_url">Error reading url</string>
     <string name="error_reading_number">Error reading number</string>
     <string name="subscribe_to_providers">Subscribe to providers</string>
