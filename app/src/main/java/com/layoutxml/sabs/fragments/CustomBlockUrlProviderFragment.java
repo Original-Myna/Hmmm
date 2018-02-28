@@ -90,7 +90,7 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
                 dialogLoading = new ProgressDialog(getActivity(), R.style.BlackAppThemeDialog);
                 String message = "Please wait. This may take a couple of minutes. Do not leave SABS.";
                 SpannableString message2 = new SpannableString(message);
-                dialogLoading.setTitle("Adding custom provider");
+                dialogLoading.setTitle("Updating");
                 message2.setSpan(new ForegroundColorSpan(Color.WHITE), 0, message2.length(), 0);
                 dialogLoading.setMessage(message2);
                 dialogLoading.setIndeterminate(true);
@@ -101,7 +101,7 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
                 dialogLoading = new ProgressDialog(getActivity(), R.style.MainAppThemeDialog);
                 String message = "Please wait. This may take a couple of minutes. Do not leave SABS.";
                 SpannableString message2 =  new SpannableString(message);
-                dialogLoading.setTitle("Adding custom provider");
+                dialogLoading.setTitle("Updating");
                 dialogLoading.setMessage(message2);
                 dialogLoading.setIndeterminate(true);
                 dialogLoading.setCancelable(false);
