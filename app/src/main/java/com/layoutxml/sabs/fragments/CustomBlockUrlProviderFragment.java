@@ -26,6 +26,7 @@ import com.layoutxml.sabs.adapter.BlockUrlProviderAdapter;
 import com.layoutxml.sabs.db.AppDatabase;
 import com.layoutxml.sabs.db.entity.BlockUrl;
 import com.layoutxml.sabs.db.entity.BlockUrlProvider;
+import com.layoutxml.sabs.utils.BlockUrlPatternsMatch;
 import com.layoutxml.sabs.utils.BlockUrlUtils;
 import com.layoutxml.sabs.viewmodel.BlockUrlProvidersViewModel;
 
@@ -101,14 +102,11 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
         addBlockUrlProviderButton.setOnClickListener(v -> {
             String urlProvider = blockUrlProviderEditText.getText().toString();
 
-            // Validation for checking whether a local file has been entered
-            String localpathPattern = "(?i)^([/]storage[/])([A-Z0-9-_./]+)([.]txt)$|^([/]sdcard[0-9]?[/])([A-Z0-9-_./]+)([.]txt)$";
-            Pattern r = Pattern.compile(localpathPattern);
-            Matcher m = r.matcher(urlProvider);
+            // Check whether the file path is valid
+            boolean validFilePath = BlockUrlPatternsMatch.filepathValid(urlProvider);
 
             // If a value has been entered and matches our local host file regex
-
-            if (!urlProvider.isEmpty() && m.matches()) {
+            if (!urlProvider.isEmpty() && validFilePath) {
 
                 // Construct the local path
                 String localfilePath = urlProvider;
