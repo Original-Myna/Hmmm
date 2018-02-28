@@ -86,6 +86,27 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
         ((MainActivity)getActivity()).hideBottomBar();
 
         updateBlockUrlProvidersButton.setOnClickListener(v -> {
+            if (blackTheme) {
+                dialogLoading = new ProgressDialog(getActivity(), R.style.BlackAppThemeDialog);
+                String message = "Please wait. This may take a couple of minutes. Do not leave SABS.";
+                SpannableString message2 = new SpannableString(message);
+                dialogLoading.setTitle("Adding custom provider");
+                message2.setSpan(new ForegroundColorSpan(Color.WHITE), 0, message2.length(), 0);
+                dialogLoading.setMessage(message2);
+                dialogLoading.setIndeterminate(true);
+                dialogLoading.setCancelable(false);
+                dialogLoading.show();
+            } else
+            {
+                dialogLoading = new ProgressDialog(getActivity(), R.style.MainAppThemeDialog);
+                String message = "Please wait. This may take a couple of minutes. Do not leave SABS.";
+                SpannableString message2 =  new SpannableString(message);
+                dialogLoading.setTitle("Adding custom provider");
+                dialogLoading.setMessage(message2);
+                dialogLoading.setIndeterminate(true);
+                dialogLoading.setCancelable(false);
+                dialogLoading.show();
+            }
             // TODO: getAll all
             // TODO: then loop and delete and update
             Maybe.fromCallable(() -> {
@@ -101,6 +122,9 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
                     } catch (IOException e) {
                         Log.e(TAG, "Failed to fetch url from urlProvider", e);
                     }
+                }
+                if (dialogLoading.isShowing()) {
+                    dialogLoading.dismiss();
                 }
                 return null;
             })
