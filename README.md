@@ -13,11 +13,15 @@ SABS is a system-wide, rootless AdBlocker, package disabler, permission manager 
 [![Screenshot3](https://i.imgur.com/4X3o9CR.png)](https://github.com/LayoutXML/SABS/releases)
 
 ## Table of contents
+* [Donate](https://github.com/LayoutXML/SABS#donate)
 * [Setup](https://github.com/LayoutXML/SABS#setup)
 * [Issues](https://github.com/LayoutXML/SABS#issues)
 * [FAQ](https://github.com/LayoutXML/SABS#faq)
 * [Feedback](https://github.com/LayoutXML/SABS#feedback)
 * [Contribute](https://github.com/LayoutXML/SABS#contribute)
+
+## Donate
+You can now donate to the LayoutXML on **[Google Play](https://play.google.com/store/apps/details?id=com.layoutxml.support)** or **[PayPal](https://www.paypal.me/RJankunas)**. I'm a school student who is about to go to university. Every dollar helps.
 
 ## Setup
 Setup for the SABS takes some time and technical skills. You are expected to be able to follow the steps and have some knowledge about how some things work.
