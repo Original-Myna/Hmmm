@@ -9609,7 +9609,6 @@ zz.cqcounter.com
 *googlesyndication.com
 *googletagmanager*
 *googletagservices.com
-*gstatic.com
 *inmobi.com
 *innovid.com
 *localytics.com
