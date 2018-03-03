@@ -16,12 +16,14 @@ import com.layoutxml.sabs.db.entity.UserBlockUrl;
 import com.layoutxml.sabs.db.entity.WhiteUrl;
 import com.layoutxml.sabs.fragments.BlockerFragment;
 import com.layoutxml.sabs.utils.BlockUrlPatternsMatch;
+import com.layoutxml.sabs.utils.SplitDenyList;
 import com.sec.enterprise.AppIdentity;
 import com.sec.enterprise.firewall.DomainFilterRule;
 import com.sec.enterprise.firewall.Firewall;
 import com.sec.enterprise.firewall.FirewallResponse;
 import com.sec.enterprise.firewall.FirewallRule;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -228,37 +230,116 @@ public class ContentBlocker56 implements ContentBlocker {
                     denySet.add(userBlockUrl.url);
             }
         }
+
+        // Add unique domains from hash set
         List<String> denyList = new ArrayList<>(denySet);
+
+        // Get the count of the unique domains
         BlockedUniqueUrls = denyList.size();
         MainActivity.updateBlockCount();
-        List<DomainFilterRule> rules = new ArrayList<>();
+
+        // Split the denylist into chunks
+        List<List<String>> partitionedDenyList = SplitDenyList.partition(denyList, 5000);
+
+        // Set the AppIdentity (all packages)
         AppIdentity appIdentity = new AppIdentity("*", null);
-        rules.add(new DomainFilterRule(appIdentity, denyList, new ArrayList<>()));
-        List<String> superAllow = new ArrayList<>();
-        superAllow.add("*");
-        List<AppInfo> appInfos = appDatabase.applicationInfoDao().getWhitelistedApps();
-        for (AppInfo app : appInfos) {
-            rules.add(new DomainFilterRule(new AppIdentity(app.packageName, null), new ArrayList<>(), superAllow));
+
+        // Get / set some useful debug info
+        final int partitionCount = partitionedDenyList.size();
+        int partitionNo = 1;
+
+        // For each partitioned list
+        for(List<String> partition : partitionedDenyList)
+        {
+            // Get some useful debug info
+            final int thisPartitionSize = partition.size();
+
+            // Create a new 'rules' arraylist
+            List<DomainFilterRule> rules = new ArrayList<>();
+
+            // Add the partitioned denyList to the rules array
+            rules.add(new DomainFilterRule(appIdentity, partition, new ArrayList<>()));
+
+            // Try to add rules to the firewall
+            try
+            {
+                // Build a string for debug output
+                String partitionDebug = MessageFormat.format("Adding list: {0} of {1} ({2} domains)", partitionNo, partitionCount, thisPartitionSize);
+                Log.i(TAG, partitionDebug);
+
+                // Add rules to the firewall
+                FirewallResponse[] response = mFirewall.addDomainFilterRules(rules);
+
+                // If the domains are added successfully
+                if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
+                    // Output to debug
+                    Log.i(TAG, "Rules added successfully.");
+                } else {
+                    // Output to debug
+                    Log.e(TAG, response[0].getResult().toString());
+                    // Return enabling failed
+                    return false;
+                }
+            }
+            catch (SecurityException ex)
+            {
+                Log.e(TAG, ex.toString());
+            }
+
+            partitionNo++;
         }
 
+        /* Moving on to app whitelisting */
 
+        // Create a new 'rules' arraylist
+        List<DomainFilterRule> apprules = new ArrayList<>();
+        // Create an array that will represent all packages
+        List<String> superAllow = new ArrayList<>();
+        superAllow.add("*");
+        // Obtain the user whitelisted apps
+        List<AppInfo> appInfos = appDatabase.applicationInfoDao().getWhitelistedApps();
+
+        // If there are whitelisted apps
+        if(!appInfos.isEmpty()) {
+            // For each whitelisted app
+            for (AppInfo app : appInfos) {
+                apprules.add(new DomainFilterRule(new AppIdentity(app.packageName, null), new ArrayList<>(), superAllow));
+            }
+
+            try {
+                // Add rules to the firewall
+                FirewallResponse[] response = mFirewall.addDomainFilterRules(apprules);
+
+                // If the domains are added successfully
+                if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
+                    // Output to debug
+                    Log.i(TAG, "App specific whitelist rules added successfully.");
+                } else {
+                    // Output to debug
+                    Log.e(TAG, response[0].getResult().toString());
+                    // Return enabling failed
+                    return false;
+                }
+            } catch (SecurityException ex) {
+                Log.e(TAG, ex.toString());
+            }
+        }
+
+        // Enable the firewall
         try {
-            FirewallResponse[] response = mFirewall.addDomainFilterRules(rules);
+            //FirewallResponse[] response = mFirewall.addDomainFilterRules(rules);
             if (!mFirewall.isFirewallEnabled()) {
                 mFirewall.enableFirewall(true);
             }
             if (!mFirewall.isDomainFilterReportEnabled()) {
                 mFirewall.enableDomainFilterReport(true);
             }
-            if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
-                Log.i(TAG, "SABS enabled successfully.");
-                return true;
-            } else {
-                return false;
-            }
         } catch (SecurityException ex) {
             return false;
         }
+
+        Log.i(TAG,"SABS enabled successfully.");
+        return true;
     }
 
     @Override
