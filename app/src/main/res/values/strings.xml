@@ -166,4 +166,6 @@
     <string name="miscblockall_desc">Block Port 53 in all apps (not recommended)</string>
     <string name="experimental_package">Experimental package</string>
     <string name="mmottis_package">mmotti\'s package</string>
+    <string name="donate_dialog_title">Donate?</string>
+    <string name="donate_dialog_message">If you like SABS, you can donate to LayoutXML on Paypal or Google Play. Would you like to do it?</string>
 </resources>

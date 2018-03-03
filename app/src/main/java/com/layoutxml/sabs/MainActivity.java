@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         Boolean blackTheme = sharedPreferences.getBoolean("blackTheme", false);
+        Boolean askedDonate = sharedPreferences.getBoolean("donate", false);
         BlockPort53 = sharedPreferences.getBoolean("blockPort53", true);
         BlockPortAll = sharedPreferences.getBoolean("blockPortAll", false);
         if (BlockedUniqueUrls==0)
@@ -161,6 +162,49 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(intent);
                         });
                 alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
+            }
+        }
+
+        if (!askedDonate)
+        {
+            sharedPreferences.edit().putBoolean("donate", true).apply();
+            if (blackTheme) {
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.BlackAppThemeDialog).create();
+                alertDialog.setTitle(getString(R.string.donate_dialog_title));
+                alertDialog.setMessage(getString(R.string.donate_dialog_message));
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Paypal",
+                        (dialog, which) -> {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.paypal.me/RJankunas"));
+                            startActivity(browserIntent);
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "GPlay",
+                        (dialog, which) -> {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse("market://details?id=com.layoutxml.support"));
+                            startActivity(intent);
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                        (dialog, which) -> dialog.dismiss());
+                alertDialog.show();
+            } else
+            {
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this, R.style.MainAppThemeDialog).create();
+                alertDialog.setTitle(R.string.donate_dialog_title);
+                alertDialog.setMessage(getString(R.string.donate_dialog_message));
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Paypal",
+                        (dialog, which) -> {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.paypal.me/RJankunas"));
+                            startActivity(browserIntent);
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "GPlay",
+                        (dialog, which) -> {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse("market://details?id=com.layoutxml.support"));
+                            startActivity(intent);
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                        (dialog, which) -> dialog.dismiss());
                 alertDialog.show();
             }
         }
