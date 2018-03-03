@@ -14,8 +14,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
         android:focusable="false"
-        android:maxLines="2"
-        android:ellipsize="end"
         android:text="@string/error_reading_url"
         android:textAppearance="@android:style/TextAppearance.Material.Menu"
         app:layout_constraintEnd_toStartOf="@+id/deleteUrlProviderImageView"
@@ -70,10 +68,19 @@
         android:layout_marginEnd="16dp"
         android:text="@string/error_reading_date"
         android:textColor="#808080"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/deleteUrlProviderImageView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/blockUrlCountTextView" />
+
+    <View
+        android:id="@+id/seperator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lastUpdatedTextView" />
 
 </android.support.constraint.ConstraintLayout>
