@@ -168,4 +168,11 @@
     <string name="mmottis_package">mmotti\'s package</string>
     <string name="donate_dialog_title">Donate?</string>
     <string name="donate_dialog_message">If you like SABS, you can donate to LayoutXML on Paypal or Google Play. Would you like to do it?</string>
+    <string name="donate">Donate</string>
+    <string name="donateDesc">Support the development of SABS</string>
+    <string name="summary_donate">You can donate to LayoutXML by buying support app on Google Play or on Paypal. I\'m a school student who is about to go to university. Every dollar helps.</string>
+    <string name="donate_gp">Google Play</string>
+    <string name="donate_gp_desc">You can buy an app on Google Play that does nothing</string>
+    <string name="donate_pp">Paypal</string>
+    <string name="donate_pp_desc">You can donate your desired sum of money on Paypal</string>
 </resources>

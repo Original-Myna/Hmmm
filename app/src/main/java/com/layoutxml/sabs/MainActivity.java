@@ -43,6 +43,7 @@ import com.layoutxml.sabs.fragments.BlockedUrlSettingFragment;
 import com.layoutxml.sabs.fragments.BlockerFragment;
 import com.layoutxml.sabs.fragments.CustomBlockUrlProviderFragment;
 import com.layoutxml.sabs.fragments.AboutFragment;
+import com.layoutxml.sabs.fragments.DonateFragment;
 import com.layoutxml.sabs.fragments.MiscSettingsFragment;
 import com.layoutxml.sabs.fragments.PackageDisablerFragment;
 import com.layoutxml.sabs.fragments.WhitelistFragment;
@@ -484,5 +485,24 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragmentContainer, new MiscSettingsFragment());
         fragmentTransaction.addToBackStack("misc_settings");
         fragmentTransaction.commit();
+    }
+
+    public void donateSettings(View view) {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        fragmentTransaction.replace(R.id.fragmentContainer, new DonateFragment());
+        fragmentTransaction.addToBackStack("donate_settings");
+        fragmentTransaction.commit();
+    }
+
+    public void donateGP(View view) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("market://details?id=com.layoutxml.support"));
+        startActivity(intent);
+    }
+
+    public void donatePP(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.paypal.me/RJankunas"));
+        startActivity(browserIntent);
     }
 }
