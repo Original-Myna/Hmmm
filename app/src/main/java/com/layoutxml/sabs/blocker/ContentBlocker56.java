@@ -1,10 +1,7 @@
 package com.layoutxml.sabs.blocker;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.util.Patterns;
 
 import com.layoutxml.sabs.App;
 import com.layoutxml.sabs.MainActivity;
@@ -14,8 +11,8 @@ import com.layoutxml.sabs.db.entity.BlockUrl;
 import com.layoutxml.sabs.db.entity.BlockUrlProvider;
 import com.layoutxml.sabs.db.entity.UserBlockUrl;
 import com.layoutxml.sabs.db.entity.WhiteUrl;
-import com.layoutxml.sabs.fragments.BlockerFragment;
 import com.layoutxml.sabs.utils.BlockUrlPatternsMatch;
+import com.layoutxml.sabs.utils.CheckWhitelisted;
 import com.layoutxml.sabs.utils.SplitDenyList;
 import com.sec.enterprise.AppIdentity;
 import com.sec.enterprise.firewall.DomainFilterRule;
@@ -193,15 +190,22 @@ public class ContentBlocker56 implements ContentBlocker {
 
         // For each block provider
         for (BlockUrlProvider blockUrlProvider : blockUrlProviders) {
+
             // Get the domains for the given list
             List<BlockUrl> blockUrls = appDatabase.blockUrlDao().getUrlsByProviderId(blockUrlProvider.id);
 
             // For each domain
             for (BlockUrl blockUrl : blockUrls) {
 
-                // If the current block URL is in the whitelist
-                if (whiteUrlsString.contains(blockUrl.url)) {
-                    // Skip to next block url
+                // Check if the current domain is whitelisted
+                boolean isWhitelisted = CheckWhitelisted.MatchesWhitelist(whiteUrlsString, blockUrl.url);
+
+                // If the current domain matches a whitelist entry
+                if(isWhitelisted)
+                {
+                    // Output to debug
+                    Log.d(TAG, "Whitelist Domain: " + blockUrl.url);
+                    // Skip to next domain
                     continue;
                 }
 
