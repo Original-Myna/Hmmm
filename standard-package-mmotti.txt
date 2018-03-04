@@ -1189,7 +1189,6 @@ americash.com
 amplifypixel.outbrain.com
 amrytt.adk2x.com
 amscdn.btrll.com
-a-msedge.net
 amung.us
 an.tacoda.net
 an.yandex.ru
@@ -2716,6 +2715,7 @@ decknetwork.net
 decouvre.la
 defaultinternet.com
 definitial.info
+defpush.com
 del1.phillyburbs.com
 delb.mspaceads.com
 delightdriving.com
@@ -3539,7 +3539,6 @@ gpr.hu
 grabbit-rabbit.com
 grafstat.ro
 grapeshot.co.uk
-graph.facebook.com
 graphics.adultfriendfinder.com
 gravitron.chron.com
 greasypalm.com
@@ -4845,7 +4844,6 @@ mr-rank.de
 mrskincash.com
 ms.yandex.ru
 ms01341.club
-msedge.net
 msgstore2.pldtprv.net
 mshelp247.weebly.com
 msn.allyes.com
@@ -6016,6 +6014,7 @@ rightmedia.net
 rightstats.com
 ringtonepartner.com
 rise-media.ru
+rivalo.network
 rlcdn.com
 rle.ru
 rmads.msn.com
