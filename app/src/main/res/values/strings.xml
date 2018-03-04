@@ -9,7 +9,7 @@
     <string name="disabling_sabs">Disabling SABS.</string>
     <string name="app_not_supported">App isn\'t supported on your device. If your device is not rooted and is made by Samsung, report this to developer.</string>
     <string name="steps_to_enable_reminder">1. Press activate.
-        \n2. Paste your Knox standard SDK enterprise key below. If you don\'t have it, sign in here - https://seap.samsung.com/enrollment, and get your <b>Enterprise</b> key here - https://seap.samsung.com/license-keys. It should not start with letters KLM.</string>
+        \n2. Paste your Knox standard SDK enterprise key below. If you don\'t have one, sign in here - https://seap.samsung.com/enrollment, and get your <b>Enterprise</b> key here - https://seap.samsung.com/license-keys. It should be 128 bytes and not start with letters KLM.</string>
     <string name="turn_on_admin">Activate</string>
     <string name="activate_knox">Activate Knox</string>
     <string name="no_internet_connection">No internet connection. Please turn on Wi-Fi or mobile data and restart the app.</string>
@@ -19,7 +19,7 @@
     <string name="block_button_text_enabling">Enabling…</string>
     <string name="block_button_text_disabling">Disabling…</string>
     <string name="edit_blocked_url_list">Manage blocked domains</string>
-    <string name="whitelistInfo">Consider whitelisting the app first. You can\'t whitelist wildcards. Enter a valid domain nae only. Press on a name to remove it. After whitelisting, turn blocking off then on.</string>
+    <string name="whitelistInfo">Consider whitelisting the app first. You can\'t whitelist wildcards. Enter a valid domain name only. Press on a name to remove it. After whitelisting, turn blocking off then on.</string>
     <string name="edit_blocked_apps_list">Manage blocking in apps</string>
     <string name="delete_app">Uninstall SABS</string>
     <string name="delete_app_dialog_title">Delete app</string>
@@ -45,27 +45,27 @@
     <string name="package_disabler_bottombar_title">Disabler</string>
     <string name="app_support_fragment_title">Donate</string>
     <string name="last_day_blocked">"Blocked in the last 24 hours: "</string>
-    <string name="loading_saved_dns">Loading saved dns addresses</string>
+    <string name="loading_saved_dns">Loading saved DNS addresses</string>
     <string name="check_input_dns">Check your input data</string>
     <string name="enable_app_for_dns">Domain blocking must be on</string>
     <string name="changed_dns">DNS addresses have been changed"</string>
     <string name="restored_dns">DNS addresses have been restored</string>
     <string name="help_developers_to_keep_up_development" translatable="false">
-        Well, I\'m not even in the college yet.
-        \nWould be nice to have a spare dollar in the future.
+        Well, I\'m not even in college yet.
+        \nIt would be nice to have a spare dollar in the future.
     </string>
     <string name="add_provider">Add new</string>
-    <string name="error_reading_url">Error reading url</string>
+    <string name="error_reading_url">Error reading URL</string>
     <string name="error_reading_number">Error reading number</string>
     <string name="subscribe_to_providers">Subscribe to providers</string>
-    <string name="delete_url">Delete Url</string>
+    <string name="delete_url">Delete URL</string>
     <string name="update_all_providers">Update All</string>
     <string name="error_reading_date">Error reading date</string>
     <string name="app_list_sorted_by_date">Sorted by installation date</string>
     <string name="app_list_sorted_by_alphabet">Sorted alphabetically</string>
     <string name="subscribe">Subscribe for {{price}} per month</string>
     <string name="subscribe_three_month">Subscribe for {{price}} per 3 month with 20% discount</string>
-    <string name="subscribeInfo">You can add more domain (host) list URLs. It must only include domain names and comments in lines starting with #. Other lines may break SABS. After adding an URL, updating a file or (un)checking a box, turn blocking off then on.</string>
+    <string name="subscribeInfo">You can add more domain (hosts) list URLs. It must only include domain names, and comments in lines starting with #. Other lines may break SABS. After adding an URL, updating a file or (un)checking a box, turn blocking off then on.</string>
     <string name="ads_example_com" translatable="false">example.com</string>
     <string name="your_device_running_old_knox_version">Your device is running an old version of KNOX. Upgrade your device or perform an update. Otherwise, you may experience crashes on certain functions.</string>
     <string name="adblock_whitelist">Whitelisted Apps</string>
@@ -76,8 +76,8 @@
     <string name="disabler_import_storage">Import disabled apps list</string>
     <string name="disabler_export_storage">Export disabled apps lis</string>
     <string name="disabler_enable_all">Enable All Apps</string>
-    <string name="imported_from_storage">Importing disabled apps from storage</string>
-    <string name="exported_to_storage">Disabled apps exported to sabs.txt</string>
+    <string name="imported_from_storage">Importing disabled apps list from storage</string>
+    <string name="exported_to_storage">Disabled apps list exported to sabs.txt</string>
     <string name="enabled_all_disabled">Enabling all disabled apps</string>
     <string name="app_list_sorted_by_disabled">Disabled apps are shown first</string>
     <string name="app_profiles_tab_title">Profiles</string>
@@ -96,7 +96,7 @@
 
     <string name="slide_1_title">Welcome!</string>
     <string name="slide_1_desc">Simple adblocker for Samsung will let you block ads, websites, permissions and more! \nMost imporantly - it\'s <b>free</b> and <b>open source</b>.
-    \n\nFor SABS to work you need to either change the package name in Manifest file or compile app with changes package name yourself. Check out how to do it here: https://github.com/LayoutXML/SABS#setup</string>
+    \n\nFor SABS to work you need to either change the package name in Manifest file or compile app with a changed package name yourself. Check out how to do it here: https://github.com/LayoutXML/SABS#setup</string>
 
     <string name="slide_2_title">KNOX Tools</string>
     <string name="slide_2_desc">SABS uses Samsung\'s KNOX tools to block ads system-wide without running in background! KNOX SDK requires administrative permissions and you will be asked to grant them soon.</string>
@@ -106,7 +106,7 @@
 \n1. Go to \“Legacy SDKs\”
 \n2. Go to \”Knox Standard SDK\”
 \n3. Select \”Enterprise\”
-\n4. Write any word
+\n4. Write any word as alias name
 \n5. Press generate
 \n Copy your key and be ready to paste it. If your key starts with letters \"KLM\" - you have generated the wrong key.
 </string>
@@ -127,9 +127,9 @@
     <string name="submit_knox_key">Submit Knox Key</string>
     <string name="copy_knox_key">Copy Knox key</string>
     <string name="standard_package_name">Standard package</string>
-    <string name="whitelist_settings_small">Unblock websites if you can\'t use them</string>
-    <string name="blacklist_settings_small">Block websites that serve ads</string>
-    <string name="subscribe_settings_small">Add hosts links with ad serving domains</string>
+    <string name="whitelist_settings_small">Unblock a website if you want to see its ads or if it fails to work when blocking is enabled.</string>
+    <string name="blacklist_settings_small">Block websites that serve ads not already blocked by your current providers</string>
+    <string name="subscribe_settings_small">Add links to lists of ad serving domains</string>
     <string name="summary">Summary</string>
     <string name="summary_small">Simple Ad Blocker for Samsung (SABS) is an adblocker with extra functionality that is maintained by LayoutXML. It is based on Adhell open source project.</string>
     <string name="version">Check for updates</string>
@@ -143,9 +143,9 @@
     <string name="reload">Reload</string>
     <string name="sort">Sort</string>
     <string name="options">Options</string>
-    <string name="steps_to_enable_reminder_error_KLM">Paste your Knox standard SDK Enterprise key below.  It should not start with letters KLM.</string>
+    <string name="steps_to_enable_reminder_error_KLM">Paste your 128-byte Knox standard SDK Enterprise key below.  It should not start with letters KLM.</string>
     <string name="lock_dialog_Title">Warning</string>
-    <string name="lock_dialog_body">Some actions may make your system unstable. To prevent any changes to get applied, select \"Uninstall SABS\" in <b>app settings!</b> Otherwise, the changes to the system will be applied. This screen is shown so that you don\'t change anything inadvertently while your phone is in your pocket.</string>
+    <string name="lock_dialog_body">Some actions may make your system unstable. To prevent any changes to get applied, select \"Uninstall SABS\" in <b>app settings!</b> Otherwise, the changes to the system will be applied. This screen is shown so that you don\'t change anything inadvertently while your phone is in your pocket. You can disable this warning in the Settings screen</string>
     <string name="ok">OK</string>
     <string name="exit">exit</string>
     <string name="undo">UNDO</string>
@@ -160,9 +160,9 @@
     <string name="show_warning">Show warning</string>
     <string name="show_warning_desc">Show warning on app start-up to prevent accidental presses while phone is in the pocket</string>
     <string name="use_black_theme">Use black theme</string>
-    <string name="use_black_theme_desc">Set the theme to amoled black and restart the app</string>
+    <string name="use_black_theme_desc">Set the theme to AMOLED black and restart the app</string>
     <string name="block_port_53">Block Port 53</string>
-    <string name="block_port_53_desc">Block Port 53 on Chrome (Stable, Canary, Beta, Dev) so that ads were blocked on these apps. After changing value, turn blocking off and on</string>
+    <string name="block_port_53_desc">Block Port 53 on Chrome (Stable, Canary, Beta, Dev) so that ads can be blocked on these apps. After changing value, turn blocking off and on</string>
     <string name="miscblockall_desc">Block Port 53 in all apps (not recommended)</string>
     <string name="experimental_package">Experimental package</string>
     <string name="mmottis_package">mmotti\'s package</string>
@@ -170,7 +170,7 @@
     <string name="donate_dialog_message">If you like SABS, you can donate to LayoutXML on Paypal or Google Play. Would you like to do it?</string>
     <string name="donate">Donate</string>
     <string name="donateDesc">Support the development of SABS</string>
-    <string name="summary_donate">You can donate to LayoutXML by buying support app on Google Play or on Paypal. I\'m a school student who is about to go to university. Every dollar helps.</string>
+    <string name="summary_donate">You can donate to LayoutXML by buying support app on Google Play or on Paypal. I\'m a student who is about to go to university. Every dollar helps.</string>
     <string name="donate_gp">Google Play</string>
     <string name="donate_gp_desc">You can buy an app on Google Play that does nothing</string>
     <string name="donate_pp">Paypal</string>
