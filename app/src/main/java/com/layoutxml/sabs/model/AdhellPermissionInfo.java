@@ -103,7 +103,6 @@ public class AdhellPermissionInfo {
         lis.add(new AdhellPermissionInfo("android.permission.MOUNT_UNMOUNT_FILESYSTEMS","Allows mounting and unmounting file systems for removable storage."));
         lis.add(new AdhellPermissionInfo("android.permission.NFC","Allows applications to perform I/O operations over NFC."));
         lis.add(new AdhellPermissionInfo("android.permission.PACKAGE_USAGE_STATS","Allows an application to collect component usage statistics"));
-        lis.add(new AdhellPermissionInfo("android.permission.the","permission implies intention to use the API and the user of the device can grant permission through the Settings application."));
         lis.add(new AdhellPermissionInfo("android.permission.PERSISTENT_ACTIVITY","This constant was deprecated in API level 9. This functionality will be removed in the future; please do not use. Allow an application to make its activities persistent."));
         lis.add(new AdhellPermissionInfo("android.permission.PROCESS_OUTGOING_CALLS","Allows an application to see the number being dialed during an outgoing call with the option to redirect the call to a different number or abort the call altogether."));
         lis.add(new AdhellPermissionInfo("android.permission.READ_CALENDAR","Allows an application to read the user's calendar data."));
