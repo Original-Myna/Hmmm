@@ -4,7 +4,7 @@ package com.layoutxml.sabs.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SplitDenyList {
+public class SplitList {
     // chops a list into non-view sublists of length L
     public static <T> List<List<T>> partition(List<T> list, final int L) {
         List<List<T>> parts = new ArrayList<List<T>>();
