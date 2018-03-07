@@ -12,8 +12,7 @@ import com.layoutxml.sabs.db.entity.BlockUrlProvider;
 import com.layoutxml.sabs.db.entity.UserBlockUrl;
 import com.layoutxml.sabs.db.entity.WhiteUrl;
 import com.layoutxml.sabs.utils.BlockUrlPatternsMatch;
-import com.layoutxml.sabs.utils.CheckWhitelisted;
-import com.layoutxml.sabs.utils.SplitDenyList;
+import com.layoutxml.sabs.utils.SplitList;
 import com.sec.enterprise.AppIdentity;
 import com.sec.enterprise.firewall.DomainFilterRule;
 import com.sec.enterprise.firewall.Firewall;
@@ -74,7 +73,14 @@ public class ContentBlocker56 implements ContentBlocker {
             disableBlocker();
         }
 
-        /* Let's first block Port 53 */
+        // Set the AppIdentity (all packages)
+        AppIdentity appIdentity = new AppIdentity("*", null);
+
+        /*
+        ==============================================================
+        Block Port 53
+        ==============================================================
+        */
 
         // If the user would like to block Port 53
         if(BlockPort53)
@@ -163,30 +169,72 @@ public class ContentBlocker56 implements ContentBlocker {
             }
         }
 
-        /* Let's move on to domain filtering */
+        /*
+        ==============================================================
+        Whitelist
+        ==============================================================
+        */
 
         // Create a new whitelist List
         List<WhiteUrl> whiteUrls = appDatabase.whiteUrlDao().getAll2();
 
-        // Create a new whitelist array to hold our whitelisted sites
-        List<String> whiteUrlsString = new ArrayList<>();
+        // If there are whitelist values specified
+        if(!whiteUrls.isEmpty()) {
 
-        // For each whitelisted site in the database
-        for (WhiteUrl whiteUrl : whiteUrls) {
-            // Remove www. www1. etc
-            // Necessary as we do it for the denylist
-            whiteUrl.url = whiteUrl.url.replaceAll("^(www)([0-9]{0,3})?(\\.)", "");
+            // Create a new whitelist array to hold our whitelisted sites
+            List<String> whiteUrlsString = new ArrayList<>();
 
-            // Add to our array
-            whiteUrlsString.add(whiteUrl.url);
+            // For each whitelisted site in the database
+            for (WhiteUrl whiteUrl : whiteUrls) {
+                // Remove www. www1. etc
+                // Necessary as we do it for the denylist
+                whiteUrl.url = whiteUrl.url.replaceAll("^(www)([0-9]{0,3})?(\\.)", "");
+
+                // Add to our array
+                whiteUrlsString.add(whiteUrl.url);
+            }
+
+            // Create a new arraylist to hold our whitelisted domains
+            List<DomainFilterRule> whiterules = new ArrayList<>();
+
+            // Add our whitelisted domains to the array
+            whiterules.add(new DomainFilterRule(appIdentity, new ArrayList<>(), whiteUrlsString));
+
+            // Try to add the whitelist rules to the firewall
+            try {
+                // Output to debug
+                Log.i(TAG, "Adding whitelist rules.");
+
+                // Add rules to the firewall
+                FirewallResponse[] response = mFirewall.addDomainFilterRules(whiterules);
+
+                // If the domains are added successfully
+                if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
+                    // Output to debug
+                    Log.i(TAG, "Whitelist rules added successfully.");
+                } else {
+                    // Output to debug
+                    Log.e(TAG, response[0].getResult().toString());
+                    // Return enabling failed
+                    return false;
+                }
+            } catch (SecurityException ex) {
+                Log.e(TAG, ex.toString());
+            }
         }
+
+        /*
+        ==============================================================
+        Denylist
+        ==============================================================
+        */
 
         // Create our denyList array
         Set<String> denySet = new HashSet<>();
         // Create a new BlockUrlProvider list and populate it with the selected lists in the DB
         List<BlockUrlProvider> blockUrlProviders = appDatabase.blockUrlProviderDao().getBlockUrlProviderBySelectedFlag(1);
 
-        Log.i(TAG, "Adding SABS domain filter rules...");
+        Log.i(TAG, "Adding denylist rules.");
 
         // For each block provider
         for (BlockUrlProvider blockUrlProvider : blockUrlProviders) {
@@ -196,20 +244,6 @@ public class ContentBlocker56 implements ContentBlocker {
 
             // For each domain
             for (BlockUrl blockUrl : blockUrls) {
-
-                // Check if the current domain is whitelisted
-                boolean isWhitelisted = CheckWhitelisted.MatchesWhitelist(whiteUrlsString, blockUrl.url);
-
-                // If the current domain matches a whitelist entry
-                if(isWhitelisted)
-                {
-                    // Output to debug
-                    Log.d(TAG, "Whitelist Domain: " + blockUrl.url);
-                    // Skip to next domain
-                    continue;
-                }
-
-                // Otherwise...
 
                 // If we have a wildcard
                 if (blockUrl.url.contains("*")) {
@@ -243,13 +277,11 @@ public class ContentBlocker56 implements ContentBlocker {
         MainActivity.updateBlockCount();
 
         // Split the denylist into chunks
-        List<List<String>> partitionedDenyList = SplitDenyList.partition(denyList, 5000);
+        List<List<String>> partitionedDenyList = SplitList.partition(denyList, 5000);
 
-        // Set the AppIdentity (all packages)
-        AppIdentity appIdentity = new AppIdentity("*", null);
-
-        // Get / set some useful debug info
+        // Get the amount of denylist partitions
         final int partitionCount = partitionedDenyList.size();
+        // Set the partition loop iteration
         int partitionNo = 1;
 
         // For each partitioned list
@@ -259,10 +291,13 @@ public class ContentBlocker56 implements ContentBlocker {
             final int thisPartitionSize = partition.size();
 
             // Create a new 'rules' arraylist
-            List<DomainFilterRule> rules = new ArrayList<>();
+            List<DomainFilterRule> denyrules = new ArrayList<>();
+
+            // Set the AppIdentity (all packages)
+            //AppIdentity appIdentity = new AppIdentity("*", null);
 
             // Add the partitioned denyList to the rules array
-            rules.add(new DomainFilterRule(appIdentity, partition, new ArrayList<>()));
+            denyrules.add(new DomainFilterRule(appIdentity, partition, new ArrayList<>()));
 
             // Try to add rules to the firewall
             try
@@ -272,7 +307,7 @@ public class ContentBlocker56 implements ContentBlocker {
                 Log.i(TAG, partitionDebug);
 
                 // Add rules to the firewall
-                FirewallResponse[] response = mFirewall.addDomainFilterRules(rules);
+                FirewallResponse[] response = mFirewall.addDomainFilterRules(denyrules);
 
                 // If the domains are added successfully
                 if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
@@ -289,11 +324,15 @@ public class ContentBlocker56 implements ContentBlocker {
             {
                 Log.e(TAG, ex.toString());
             }
-
+            // Increment iteration #
             partitionNo++;
         }
 
-        /* Moving on to app whitelisting */
+        /*
+        ==============================================================
+        APP Whitelisting
+        ==============================================================
+        */
 
         // Create a new 'rules' arraylist
         List<DomainFilterRule> apprules = new ArrayList<>();
