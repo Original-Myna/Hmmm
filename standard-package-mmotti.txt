@@ -78,7 +78,6 @@
 *.tynt.com
 *.xiti.com
 *.xxxcounter.com
-*.yimg.com
 *.youku.com
 *.zedo.com
 006.free-counter.co.uk
@@ -242,6 +241,7 @@
 a.0day.kiev.ua
 a.1nimo.com
 a.ad.playstation.net
+a.adexchangemachine.com
 a.admaxserver.com
 a.adorika.net
 a.adready.com
@@ -297,6 +297,7 @@ a2.websponsors.com
 a200.yieldoptimizer.com
 a3.suntimes.com
 a3.websponsors.com
+a32.g.a.yimg.com
 a4.websponsors.com
 a5.websponsors.com
 a796faee-7163-4757-a34f-e5b48cada4cb.statcamp.net
@@ -1126,6 +1127,7 @@ aid-golf-golfdust-training.tabrays.com
 aidu-ads.de
 aim4media.com
 aimg.haber3.com
+airfrance.life
 airline-ticket.gloses.net
 air-plane-ticket.beesearch.info
 aistat.net
@@ -1453,6 +1455,7 @@ azoogleads.com
 azvjudwr.info
 azz.badazz.org
 b.a2gw.com
+b.adexchangemachine.com
 b.ads1.msn.com
 b.ads2.msads.net
 b.ads2.msn.com
@@ -1876,6 +1879,7 @@ by.optimost.com
 byinter.net
 c.actiondesk.com
 c.ad6media.fr
+c.adexchangemachine.com
 c.adroll.com
 c.am10.ru
 c.anytrx.com
@@ -2508,6 +2512,7 @@ cornflakes.pathfinder.com
 cornomase.win
 corusads.dserv.ca
 cosmeticscentre.uk.com
+costcoworld.life
 counsellor.gov.cn
 count.casino-trade.com
 count.channeladvisor.com
@@ -2538,6 +2543,7 @@ counters.xaraonline.com
 counting.kmindex.ru
 counts.tucows.com
 coupling-media.de
+coupongifts.life
 cover.m2y.siemens.ch
 cp.promoisland.net
 cpabank.com
@@ -2668,6 +2674,7 @@ dap.digitalgov.gov
 dapper.net
 darakht.com
 darmowe-liczniki.info
+darmowe-zakupy.com
 dart.chron.com
 dash001.prxio.site
 dashbo15myapp.com
@@ -2731,6 +2738,7 @@ delivery.w00tads.com
 delivery.way2traffic.com
 deloo.de
 deloton.com
+delta-promotion-usa.com
 demandbase.com
 demdex.net
 demr.mspaceads.com
@@ -3039,6 +3047,7 @@ eu2.madsone.com
 eu-adcenter.net
 euniverseads.com
 eu-pn4.adserver.yahoo.com
+eur.a1.yimg.com
 eurekster.com
 euroclick.com
 europe.adserver.yahoo.com
@@ -3103,12 +3112,14 @@ f2.p0y.com
 f3.p0y.com
 f4.p0y.com
 f5biz.com
+fabryka-nagrod.com
 facebook-repto1040s2.ahlamountada.com
 faceboook-replyei0ki.montadalitihad.com
 facemail.com
 faeecb0ock.info
 faggotry.com
 fahrrad.bikesshop.de
+fajnefanty.com
 falkag.de
 falkag.net
 family-offer.com
@@ -3935,6 +3946,7 @@ in.adserver.yahoo.com
 in.getclicky.com
 in.paycounter.com
 in.webcounter.cc
+in.yimg.com
 inboxdollars.com
 incentaclick.com
 incentivegateway.com
@@ -3960,6 +3972,7 @@ infinite-ads.com
 infinityads.com
 infolinks.com
 infopaypal.com
+informacja-dnia.com
 information.com
 infos-bourses.com
 inklineglobal.com
@@ -4183,6 +4196,7 @@ kitchentablegang.org
 kithrup.matchlogic.com
 kitsjim.com
 kixer.com
+klikasz-i-masz.com
 klikdirect.com
 klikmoney.net
 kliks.affiliate4you.nl
@@ -4206,6 +4220,7 @@ konstantin.freespaces.com
 kontera.com
 konversation.com
 kos.interseek.si
+koszykrd.wp.pl
 kplusd.far.ru
 kpremium.com
 kqzyfj.com
@@ -4827,6 +4842,7 @@ movie-port.ru
 movies.701pages.com
 movsflix.com
 mowfruit.com
+mozebyctwoje.com
 mp.tscapeplay.com
 mp3playersource.com
 mp3red.cc
@@ -4952,7 +4968,9 @@ na.ads.yahoo.com
 na47.com
 nactx.com
 naenticle.info
+nagroda-dla-ciebie.com
 naj.sk
+najlepszedlaciebie.com
 nakhit.com
 namimedia.com
 nanoadexchange.com
@@ -5255,8 +5273,10 @@ omtrdc.net
 on.nimp.org
 onclasrv.com
 onclickads.net
+onclickmega.com
 onclickprediction.com
 onclickpredictiv.com
+onclicksuper.com
 onclicktop.com
 onclkds.com
 one.123counters.com
@@ -5319,6 +5339,7 @@ openx.xenium.pl
 openx2.fotoflexer.com
 openxxx.viragemedia.com
 opienetwork.com
+oplaca-sie.pl
 opserver01.iti.net.pk
 optiad.net
 optimize.indieclick.com
@@ -5589,6 +5610,8 @@ pixel-secure.solvemedia.com
 pl.ads.justpremium.com
 pl.betclic.com
 pl.spanel.gem.pl
+pl.superando.net
+pl.web.toleadoo.com
 placelocal.com
 plasmatv4free.com
 plasmatvreward.com
@@ -5921,6 +5944,7 @@ readserver.net
 realads.realmedia.com
 realcastmedia.com
 realclix.com
+realcouponnow.com
 realgfsbucks.com
 realincestvideos.com
 realizemobicom.com
@@ -6007,6 +6031,7 @@ rhads.sv.publicus.com
 rhydel.site
 rich.qq.com
 richmails.com
+richmedia.yimg.com
 richwebmaster.com
 rickrolling.com
 ridepush.com
@@ -6346,6 +6371,7 @@ sexytiger.ru
 sexzavod.com
 sfads.osdn.com
 sg.adserver.yahoo.com
+sg.yimg.com
 shafou.com
 shakesea.com
 shakytaste.com
@@ -6810,6 +6836,8 @@ sysip.net
 system-kernel-disk-errorx001dsxx-microsoft-windows.55errors5353.net
 system-live-media.cz
 systweak.com
+szalonenagrody.com
+szalonepromocje.com
 t.adonly.com
 t.atpanel.com
 t.cpmadvisors.com
@@ -6866,6 +6894,7 @@ tanger.com.br
 tangerinenet.biz
 tanieaukcje.com
 taniezakupy.pl
+tanio-najtaniej.com
 tao123.com
 taobaoafp.allyes.cn
 taobaoafp.allyes.com
@@ -7281,6 +7310,13 @@ twittad.com
 twitter.login.kevanshome.org
 twitter.secure.bzpharma.net
 twnads.weather.ca
+twoj-bon.pl
+twoje-nagrody.com.pl
+twoje-nagrody.pl
+twoj-macbook.pl
+twojszczesliwydzien.com
+twoj-typ.pl
+twoj-voucher.com
 tx.micro.net.pk
 tynt.com
 tyroo.com
@@ -7307,6 +7343,7 @@ ui.oix.net
 ui.ppjol.com
 uip.semasio.net
 uk.adserver.yahoo.com
+uk.i1.yimg.com
 uk.sitestat.com
 uk-ads.openx.net
 ukbanners.com
@@ -7354,8 +7391,33 @@ urdoot.win
 urlcash.net
 urlcut.net
 urshort.net
+us.a1.yimg.com
 us.adserver.yahoo.com
+us.b1.yimg.com
+us.c1.yimg.com
+us.d1.yimg.com
+us.e1.yimg.com
+us.f1.yimg.com
+us.g1.yimg.com
+us.h1.yimg.com
+us.j1.yimg.com
+us.k1.yimg.com
 us.kopuz.com
+us.l1.yimg.com
+us.m1.yimg.com
+us.n1.yimg.com
+us.o1.yimg.com
+us.p1.yimg.com
+us.q1.yimg.com
+us.r1.yimg.com
+us.s1.yimg.com
+us.t1.yimg.com
+us.u1.yimg.com
+us.v1.yimg.com
+us.w1.yimg.com
+us.x1.yimg.com
+us.y1.yimg.com
+us.z1.yimg.com
 usa.nedstat.net
 us-ads.openx.net
 usads.vibrantmedia.com
@@ -7719,6 +7781,10 @@ www-banner.chat.ru
 www-google-analytics.l.google.com
 wwwpromoter.com
 wwww.8cr.purredheanb.online
+wybieraj-wygrywaj.pl
+wytypowana-osoba-wygrywajaca.pl
+wytypowany-zwyciezca.com
+wytypowany-zwyciezca.pl
 x.azjmp.com
 x.bidswitch.net
 x.cb.kount.com
@@ -7766,6 +7832,8 @@ xml.explorads.com
 xml.mediashakers.com
 xml.yepmedia.com
 xmlheads.com
+xn--lt-68s.com
+xn--turkishirlines-1p8g.com
 xoomer.alice.it
 xpantivirus.com
 xpcs.ads.yahoo.com
