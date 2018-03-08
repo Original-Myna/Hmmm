@@ -85,87 +85,51 @@ public class ContentBlocker56 implements ContentBlocker {
         // If the user would like to block Port 53
         if(BlockPort53)
         {
+            // Create a FirewallRule to hold our rules
+            FirewallRule[] portRules = new FirewallRule[2];
+
+            // IPv4
+            portRules[0] = new FirewallRule(FirewallRule.RuleType.DENY, Firewall.AddressType.IPV4);
+            portRules[0].setIpAddress("*");
+            portRules[0].setPortNumber("53");
+            // IPv6
+            portRules[1] = new FirewallRule(FirewallRule.RuleType.DENY, Firewall.AddressType.IPV6);
+            portRules[1].setIpAddress("*");
+            portRules[1].setPortNumber("53");
+
             // If the user would like to block Port 53 for ALL packages
             if(BlockPortAll)
             {
-                Log.d(TAG, "BLOCKING * PORT 53");
+                Log.d(TAG, "Adding: Deny * Port 53");
 
-                // Try to add the rules to the firewall
-                try
+                // If unable to add the rules to the firewall
+                if(!sendRules(portRules))
                 {
-                    Log.d(TAG, "BLOCKING PORT 53 on all apps");
-
-                    // Create a FirewallRule to hold our rules
-                    FirewallRule[] portRules = new FirewallRule[2];
-
-                    // IPv4
-                    portRules[0] = new FirewallRule(FirewallRule.RuleType.DENY, Firewall.AddressType.IPV4);
-                    portRules[0].setIpAddress("*");
-                    portRules[0].setPortNumber("53");
-                    // IPv6
-                    portRules[1] = new FirewallRule(FirewallRule.RuleType.DENY, Firewall.AddressType.IPV6);
-                    portRules[1].setIpAddress("*");
-                    portRules[1].setPortNumber("53");
-
-                    // Add rules to the firewall
-                    FirewallResponse[] response = mFirewall.addRules(portRules);
-
-                    // Output result for debugging
-                    if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
-                        Log.i(TAG, "IPv4/6 Rule Added: DENY * Port 53");
-                    }
-                    else
-                    {
-                        Log.d(TAG, "IPv4/6 Rule NOT added: DENY * Port 53");
-                    }
-
-                } catch (SecurityException ex) {
-                    Log.e(TAG, "An error occured whilst adding DENY * Port 53 rule.", ex);
+                    // return false (break operation)
                     return false;
                 }
             }
             else
             {
-                // Try to add the rules to the firewall
-                try
-                {
-                    Log.d(TAG, "BLOCKING PORT 53 on Chrome only");
+                // Create an array with known Chrome packages
+                List<String> Port53Apps = new ArrayList<>(Arrays.asList("com.android.chrome", "com.chrome.beta", "com.chrome.dev", "com.chrome.canary"));
 
-                    // Create a FirewallRule to hold our rules
-                    FirewallRule[] portRules = new FirewallRule[2];
+                // For each Chrome Package
+                for (String app : Port53Apps) {
+                    // IPv4
+                    portRules[0].setApplication(new AppIdentity(app, null));
+                    // IPv6
+                    portRules[1].setApplication(new AppIdentity(app, null));
 
-                    // Create an array with known Chrome packages
-                    List<String> Port53Apps = new ArrayList<>(Arrays.asList("com.android.chrome", "com.chrome.beta", "com.chrome.dev", "com.chrome.canary"));
+                    Log.i(TAG, "Adding IPV4/6 rule for: " + app);
 
-                    // For each Chrome Package
-                    for (String app : Port53Apps) {
-                        // IPv4
-                        portRules[0] = new FirewallRule(FirewallRule.RuleType.DENY, Firewall.AddressType.IPV4);
-                        portRules[0].setIpAddress("*");
-                        portRules[0].setPortNumber("53");
-                        portRules[0].setApplication(new AppIdentity(app, null));
-                        // IPv6
-                        portRules[1] = new FirewallRule(FirewallRule.RuleType.DENY, Firewall.AddressType.IPV6);
-                        portRules[1].setIpAddress("*");
-                        portRules[1].setPortNumber("53");
-                        portRules[1].setApplication(new AppIdentity(app, null));
-
-                        // Add rules to the firewall
-                        FirewallResponse[] response = mFirewall.addRules(portRules);
-
-                        if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
-                            Log.i(TAG, "IPv4/6 Rule Added:" + app);
-                        }
-                        else
-                        {
-                            Log.d(TAG, "IPv4/6 Rule NOT added:" + app);
-                        }
+                    // If unable to add the rules to the firewall
+                    if(!sendRules(portRules))
+                    {
+                        //return false (break the operation)
+                        return false;
                     }
-                } catch (SecurityException ex) {
-                    Log.e(TAG, "An error occurred whilst adding DENY Chrome Port 53 rule.", ex);
-                    return false;
                 }
-
             }
         }
 
@@ -200,26 +164,13 @@ public class ContentBlocker56 implements ContentBlocker {
             // Add our whitelisted domains to the array
             whiterules.add(new DomainFilterRule(appIdentity, new ArrayList<>(), whiteUrlsString));
 
-            // Try to add the whitelist rules to the firewall
-            try {
-                // Output to debug
-                Log.i(TAG, "Adding whitelist rules.");
+            Log.i(TAG, "Adding whitelist rules.");
 
-                // Add rules to the firewall
-                FirewallResponse[] response = mFirewall.addDomainFilterRules(whiterules);
-
-                // If the domains are added successfully
-                if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
-                    // Output to debug
-                    Log.i(TAG, "Whitelist rules added successfully.");
-                } else {
-                    // Output to debug
-                    Log.e(TAG, response[0].getResult().toString());
-                    // Return enabling failed
-                    return false;
-                }
-            } catch (SecurityException ex) {
-                Log.e(TAG, ex.toString());
+            // If unable to add the rules to the firewall
+            if(!sendRules(whiterules))
+            {
+                // return false (break operation)
+                return false;
             }
         }
 
@@ -293,37 +244,22 @@ public class ContentBlocker56 implements ContentBlocker {
             // Create a new 'rules' arraylist
             List<DomainFilterRule> denyrules = new ArrayList<>();
 
-            // Set the AppIdentity (all packages)
-            //AppIdentity appIdentity = new AppIdentity("*", null);
-
             // Add the partitioned denyList to the rules array
             denyrules.add(new DomainFilterRule(appIdentity, partition, new ArrayList<>()));
 
             // Try to add rules to the firewall
-            try
-            {
+
                 // Build a string for debug output
                 String partitionDebug = MessageFormat.format("Adding list: {0} of {1} ({2} domains)", partitionNo, partitionCount, thisPartitionSize);
                 Log.i(TAG, partitionDebug);
 
-                // Add rules to the firewall
-                FirewallResponse[] response = mFirewall.addDomainFilterRules(denyrules);
-
-                // If the domains are added successfully
-                if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
-                    // Output to debug
-                    Log.i(TAG, "Rules added successfully.");
-                } else {
-                    // Output to debug
-                    Log.e(TAG, response[0].getResult().toString());
-                    // Return enabling failed
+                // If unable to add the rules to the firewall
+                if(!sendRules(denyrules))
+                {
+                    // return false (break operation)
                     return false;
                 }
-            }
-            catch (SecurityException ex)
-            {
-                Log.e(TAG, ex.toString());
-            }
+
             // Increment iteration #
             partitionNo++;
         }
@@ -349,22 +285,11 @@ public class ContentBlocker56 implements ContentBlocker {
                 apprules.add(new DomainFilterRule(new AppIdentity(app.packageName, null), new ArrayList<>(), superAllow));
             }
 
-            try {
-                // Add rules to the firewall
-                FirewallResponse[] response = mFirewall.addDomainFilterRules(apprules);
-
-                // If the domains are added successfully
-                if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
-                    // Output to debug
-                    Log.i(TAG, "App specific whitelist rules added successfully.");
-                } else {
-                    // Output to debug
-                    Log.e(TAG, response[0].getResult().toString());
-                    // Return enabling failed
-                    return false;
-                }
-            } catch (SecurityException ex) {
-                Log.e(TAG, ex.toString());
+            // If unable to add the rules to the firewall
+            if(!sendRules(apprules))
+            {
+                // return false (break operation)
+                return false;
             }
         }
 
@@ -382,6 +307,65 @@ public class ContentBlocker56 implements ContentBlocker {
         }
 
         Log.i(TAG,"SABS enabled successfully.");
+        return true;
+    }
+
+    public boolean sendRules(List<DomainFilterRule> dfRules)
+    {
+        // If there are domainfilter rules to process
+        if(!dfRules.isEmpty()) {
+
+            try
+            {
+                // Add rules to the firewall
+                FirewallResponse[] response = mFirewall.addDomainFilterRules(dfRules);
+
+                // If the domains are added successfully
+                if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
+                    // Output to debug
+                    Log.i(TAG, "Domain Filter rule(s) added successfully.");
+                } else {
+                    // Output to debug
+                    Log.e(TAG, response[0].getResult().toString());
+                    // Return enabling failed
+                    return false;
+                }
+            }
+            catch(SecurityException ex)
+            {
+                Log.e(TAG, ex.toString());
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean sendRules(FirewallRule[] fwRules)
+    {
+        // If there are firewall rules to process
+        if(fwRules.length > 0) {
+
+            try
+            {
+                // Add rules to the firewall
+                FirewallResponse[] response = mFirewall.addRules(fwRules);
+
+                if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
+                    Log.i(TAG, "Firewall rule(s) added successfully.");
+                }
+                else
+                {
+                    // Output to debug
+                    Log.d(TAG, "Firewall rule(s) skipped.");
+                }
+
+            } catch (SecurityException ex) {
+                Log.e(TAG, ex.toString());
+                return false;
+            }
+        }
+
         return true;
     }
 
