@@ -20,6 +20,8 @@ import com.layoutxml.sabs.db.entity.ReportBlockedUrl;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import static com.layoutxml.sabs.Global.domainsToExport;
+
 public class ReportBlockedUrlAdapter extends ArrayAdapter<ReportBlockedUrl> {
     private static final String TAG = ReportBlockedUrlAdapter.class.getCanonicalName();
     private PackageManager packageManager;
@@ -27,6 +29,11 @@ public class ReportBlockedUrlAdapter extends ArrayAdapter<ReportBlockedUrl> {
     public ReportBlockedUrlAdapter(@NonNull Context context, @NonNull List<ReportBlockedUrl> objects) {
         super(context, 0, objects);
         packageManager = getContext().getPackageManager();
+
+        for (ReportBlockedUrl item : objects)
+        {
+            domainsToExport.add(item.url);
+        }
     }
 
     @NonNull
