@@ -6,6 +6,7 @@ import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -14,8 +15,10 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.text.InputType;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -25,6 +28,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -102,27 +106,65 @@ public class AdhellReportsFragment extends LifecycleFragment {
         switch (item.getItemId()) {
             case R.id.action_export:
                 if (blackTheme) {
-                    dialogLoading = new ProgressDialog(getActivity(), R.style.BlackAppThemeDialog);
-                    String message = "Please wait. This may take a couple of minutes. Do not leave SABS.";
-                    SpannableString message2 = new SpannableString(message);
-                    dialogLoading.setTitle("Exporting");
-                    message2.setSpan(new ForegroundColorSpan(Color.WHITE), 0, message2.length(), 0);
-                    dialogLoading.setMessage(message2);
-                    dialogLoading.setIndeterminate(true);
-                    dialogLoading.setCancelable(false);
-                    dialogLoading.show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()), R.style.BlackAppThemeDialog);
+                    builder.setTitle(getString(R.string.action_export_hint));
+                    builder.setMessage("Export domains blocked in the last 24 hours to a file. Choose a file name below.");
+                    final EditText input = new EditText(getContext());
+                    input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    builder.setView(input);
+                    builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialogLoading = new ProgressDialog(getActivity(), R.style.BlackAppThemeDialog);
+                            String message = "Please wait. This may take a couple of minutes. Do not leave SABS.";
+                            SpannableString message2 = new SpannableString(message);
+                            dialogLoading.setTitle("Exporting");
+                            message2.setSpan(new ForegroundColorSpan(Color.WHITE), 0, message2.length(), 0);
+                            dialogLoading.setMessage(message2);
+                            dialogLoading.setIndeterminate(true);
+                            dialogLoading.setCancelable(false);
+                            dialogLoading.show();
+                            ExportBlockedDomains(input.getText().toString());
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
                 } else
                 {
-                    dialogLoading = new ProgressDialog(getActivity(), R.style.MainAppThemeDialog);
-                    String message = "Please wait. This may take a couple of minutes. Do not leave SABS.";
-                    SpannableString message2 =  new SpannableString(message);
-                    dialogLoading.setTitle("Exporting");
-                    dialogLoading.setMessage(message2);
-                    dialogLoading.setIndeterminate(true);
-                    dialogLoading.setCancelable(false);
-                    dialogLoading.show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()), R.style.MainAppThemeDialog);
+                    builder.setTitle(getString(R.string.action_export_hint));
+                    builder.setMessage("Export domains blocked in the last 24 hours to a file. Choose a file name below.");
+                    final EditText input = new EditText(getContext());
+                    input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    builder.setView(input);
+                    builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialogLoading = new ProgressDialog(getActivity(), R.style.MainAppThemeDialog);
+                            String message = "Please wait. This may take a couple of minutes. Do not leave SABS.";
+                            SpannableString message2 = new SpannableString(message);
+                            dialogLoading.setTitle("Exporting");
+                            message2.setSpan(new ForegroundColorSpan(Color.WHITE), 0, message2.length(), 0);
+                            dialogLoading.setMessage(message2);
+                            dialogLoading.setIndeterminate(true);
+                            dialogLoading.setCancelable(false);
+                            dialogLoading.show();
+                            ExportBlockedDomains(input.getText().toString());
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
                 }
-                ExportBlockedDomains();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -133,8 +175,8 @@ public class AdhellReportsFragment extends LifecycleFragment {
         super.onStop();
     }
 
-    public void ExportBlockedDomains() {
-        exportDomains("hosts");
+    public void ExportBlockedDomains(String filename) {
+        exportDomains(filename);
         if (dialogLoading.isShowing()) {
             dialogLoading.dismiss();
         }
@@ -159,7 +201,7 @@ public class AdhellReportsFragment extends LifecycleFragment {
         catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
-        Snackbar.make(getActivity().findViewById(android.R.id.content), "Exported " + domainsToExport.size() + " domains", Snackbar.LENGTH_LONG).show();
+        Snackbar.make(getActivity().findViewById(android.R.id.content), "Exported " + count + " domains", Snackbar.LENGTH_LONG).show();
     }
 
 }
