@@ -12,9 +12,11 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -61,6 +63,9 @@ public class AdhellReportsFragment extends LifecycleFragment {
     private TextView lastDayInfoTextView;
     private ListView blockedDomainsListView;
     private ProgressDialog dialogLoading;
+    private SwipeRefreshLayout refreshRecentActivity;
+    private Handler mHandler = new Handler();
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,6 +92,8 @@ public class AdhellReportsFragment extends LifecycleFragment {
         blockedDomainsListView = view.findViewById(R.id.blockedDomainsListView);
         lastDayInfoTextView = view.findViewById(R.id.lastDayInfoTextView);
         lastDayInfoTextView.setText("Blocked in the last " + Integer.toString(RecentActivityDays) + " day(s): ");
+        refreshRecentActivity = view.findViewById(R.id.refreshRecentActivity);
+        refreshRecentActivity.setOnRefreshListener(getSwipeRefreshListener());
 
         AdhellReportViewModel adhellReportViewModel = ViewModelProviders.of(getActivity()).get(AdhellReportViewModel.class);
         adhellReportViewModel.getReportBlockedUrls().observe(this, reportBlockedUrls -> {
@@ -281,6 +288,30 @@ public class AdhellReportsFragment extends LifecycleFragment {
             Log.e("Exception", "File write failed: " + e.toString());
         }
         Snackbar.make(getActivity().findViewById(android.R.id.content), "Exported " + count + " domains", Snackbar.LENGTH_LONG).show();
+    }
+
+    protected SwipeRefreshLayout.OnRefreshListener getSwipeRefreshListener(){
+
+        return new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                AdhellReportViewModel adhellReportViewModel = ViewModelProviders.of(getActivity()).get(AdhellReportViewModel.class);
+                adhellReportViewModel.getReportBlockedUrls().observe(getActivity(), reportBlockedUrls -> {
+                    assert reportBlockedUrls != null;
+                    ReportBlockedUrlAdapter reportBlockedUrlAdapter = new ReportBlockedUrlAdapter(Objects.requireNonNull(getContext()), reportBlockedUrls);
+                    blockedDomainsListView.setAdapter(reportBlockedUrlAdapter);
+                    lastDayBlockedTextView.setText(String.valueOf(reportBlockedUrls.size()));
+                    reportBlockedUrlAdapter.notifyDataSetChanged();
+                });
+                mHandler.postDelayed(new Runnable() {
+                    public void run() {
+                        if (refreshRecentActivity != null) {
+                            refreshRecentActivity.setRefreshing(false);
+                        }
+                    }
+                }, 1000);
+            }
+        };
     }
 
 }
