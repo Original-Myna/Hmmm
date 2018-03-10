@@ -60,7 +60,7 @@ public class BlockedDomainService extends IntentService {
         }
 
         Log.d(TAG, "Saving domain list");
-        Date yesterday = new Date(System.currentTimeMillis() - 24 * 3600 * 1000);
+        Date yesterday = new Date(System.currentTimeMillis() - 24 * 3600 * 1000 * 7);
         appDatabase.reportBlockedUrlDao().deleteBefore(yesterday);
 
         ReportBlockedUrl lastBlockedUrl = appDatabase.reportBlockedUrlDao().getLastBlockedDomain();

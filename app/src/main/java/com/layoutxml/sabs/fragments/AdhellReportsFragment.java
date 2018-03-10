@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.layoutxml.sabs.App;
@@ -48,12 +49,16 @@ import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+
+import static com.layoutxml.sabs.Global.RecentActivityDays;
 import static com.layoutxml.sabs.Global.domainsToExport;
+import static java.lang.Integer.parseInt;
 
 
 public class AdhellReportsFragment extends LifecycleFragment {
     private AppCompatActivity parentActivity;
     private TextView lastDayBlockedTextView;
+    private TextView lastDayInfoTextView;
     private ListView blockedDomainsListView;
     private ProgressDialog dialogLoading;
 
@@ -80,6 +85,8 @@ public class AdhellReportsFragment extends LifecycleFragment {
 
         lastDayBlockedTextView = view.findViewById(R.id.lastDayBlockedTextView);
         blockedDomainsListView = view.findViewById(R.id.blockedDomainsListView);
+        lastDayInfoTextView = view.findViewById(R.id.lastDayInfoTextView);
+        lastDayInfoTextView.setText("Blocked in the last " + Integer.toString(RecentActivityDays) + " day(s): ");
 
         AdhellReportViewModel adhellReportViewModel = ViewModelProviders.of(getActivity()).get(AdhellReportViewModel.class);
         adhellReportViewModel.getReportBlockedUrls().observe(this, reportBlockedUrls -> {
@@ -155,6 +162,78 @@ public class AdhellReportsFragment extends LifecycleFragment {
                             dialogLoading.setCancelable(false);
                             dialogLoading.show();
                             ExportBlockedDomains(input.getText().toString());
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
+                }
+                break;
+            case R.id.action_change_days:
+                if (blackTheme) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()), R.style.BlackAppThemeDialog);
+                    builder.setTitle(getString(R.string.action_change_days_hint));
+                    builder.setMessage("Select the time for recent activity and exporting blocked domains to file in days from 1 to 7.");
+                    final EditText input = new EditText(getContext());
+                    input.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    builder.setView(input);
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int number = parseInt(input.getText().toString());
+                            if (number > 7)
+                                number = 7;
+                            else if (number < 1)
+                                number = 1;
+                            RecentActivityDays=number;
+                            lastDayInfoTextView.setText("Blocked in the last " + Integer.toString(number) + " day(s): ");
+                            AdhellReportViewModel adhellReportViewModel = ViewModelProviders.of(getActivity()).get(AdhellReportViewModel.class);
+                            adhellReportViewModel.getReportBlockedUrls().observe(getActivity(), reportBlockedUrls -> {
+                                assert reportBlockedUrls != null;
+                                ReportBlockedUrlAdapter reportBlockedUrlAdapter = new ReportBlockedUrlAdapter(Objects.requireNonNull(getContext()), reportBlockedUrls);
+                                blockedDomainsListView.setAdapter(reportBlockedUrlAdapter);
+                                lastDayBlockedTextView.setText(String.valueOf(reportBlockedUrls.size()));
+                                reportBlockedUrlAdapter.notifyDataSetChanged();
+                            });
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
+                } else
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()), R.style.MainAppThemeDialog);
+                    builder.setTitle(getString(R.string.action_change_days_hint));
+                    builder.setMessage("Select the time for recent activity and exporting blocked domains to file in days from 1 to 7.");
+                    final EditText input = new EditText(getContext());
+                    input.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    builder.setView(input);
+                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int number = parseInt(input.getText().toString());
+                            if (number > 7)
+                                number = 7;
+                            else if (number < 1)
+                                number = 1;
+                            RecentActivityDays=number;
+                            lastDayInfoTextView.setText("Blocked in the last " + Integer.toString(number) + " day(s): ");
+                            AdhellReportViewModel adhellReportViewModel = ViewModelProviders.of(getActivity()).get(AdhellReportViewModel.class);
+                            adhellReportViewModel.getReportBlockedUrls().observe(getActivity(), reportBlockedUrls -> {
+                                assert reportBlockedUrls != null;
+                                ReportBlockedUrlAdapter reportBlockedUrlAdapter = new ReportBlockedUrlAdapter(Objects.requireNonNull(getContext()), reportBlockedUrls);
+                                blockedDomainsListView.setAdapter(reportBlockedUrlAdapter);
+                                lastDayBlockedTextView.setText(String.valueOf(reportBlockedUrls.size()));
+                                reportBlockedUrlAdapter.notifyDataSetChanged();
+                            });
                         }
                     });
                     builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

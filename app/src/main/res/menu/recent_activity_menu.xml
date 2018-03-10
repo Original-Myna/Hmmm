@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_change_days"
+        android:icon="?attr/ic_action_change_days"
+        app:showAsAction="ifRoom"
+        android:title="@string/action_change_days_hint"/>
+
+    <item
         android:id="@+id/action_export"
         android:icon="?attr/ic_action_save"
         app:showAsAction="always"

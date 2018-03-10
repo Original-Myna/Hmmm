@@ -22,6 +22,7 @@
         <item name="ic_settings" >@drawable/ic_settings</item>
         <item name="ic_action_search">@drawable/ic_action_search</item>
         <item name="ic_action_save">@drawable/ic_action_save</item>
+        <item name="ic_action_change_days">@drawable/ic_action_change_days</item>
         <item name="ic_more_vert">@drawable/ic_more_vert</item>
         <item name="ic_sort">@drawable/ic_sort</item>
         <item name="android:windowDisablePreview">true</item>
@@ -38,6 +39,7 @@
         <item name="ic_settings" >@drawable/ic_settings</item>
         <item name="ic_action_search">@drawable/ic_action_search</item>
         <item name="ic_action_save">@drawable/ic_action_save</item>
+        <item name="ic_action_change_days">@drawable/ic_action_change_days</item>
         <item name="ic_more_vert">@drawable/ic_more_vert</item>
         <item name="ic_sort">@drawable/ic_sort</item>
         <item name="android:windowDisablePreview">true</item>
@@ -59,6 +61,7 @@
         <item name="ic_settings" >@drawable/ic_settings_dark</item>
         <item name="ic_action_search">@drawable/ic_action_search_dark</item>
         <item name="ic_action_save">@drawable/ic_action_save_dark</item>
+        <item name="ic_action_change_days">@drawable/ic_action_change_days_dark</item>
         <item name="ic_more_vert">@drawable/ic_more_vert_dark</item>
         <item name="ic_sort">@drawable/ic_sort_dark</item>
         <item name="colorSwitchThumbNormal">@color/colorPrimary</item>
@@ -84,6 +87,7 @@
         <item name="ic_settings" >@drawable/ic_settings_dark</item>
         <item name="ic_action_search">@drawable/ic_action_search_dark</item>
         <item name="ic_action_save">@drawable/ic_action_save_dark</item>
+        <item name="ic_action_change_days">@drawable/ic_action_change_days_dark</item>
         <item name="ic_more_vert">@drawable/ic_more_vert_dark</item>
         <item name="ic_sort">@drawable/ic_sort_dark</item>
         <item name="colorSwitchThumbNormal">@color/colorPrimary</item>

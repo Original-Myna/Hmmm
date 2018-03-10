@@ -5,4 +5,5 @@
     <attr name="ic_more_vert" format="reference"/>
     <attr name="ic_sort" format="reference"/>
     <attr name="ic_action_save" format="reference"/>
+    <attr name="ic_action_change_days" format="reference"/>
 </resources>

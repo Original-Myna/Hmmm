@@ -8,4 +8,5 @@ public class Global {
     public static boolean BlockPortAll = false;
     public static int BlockedUniqueUrls = 0;
     public static Set<String> domainsToExport = new HashSet<>();
+    public static int RecentActivityDays = 1;
 }
