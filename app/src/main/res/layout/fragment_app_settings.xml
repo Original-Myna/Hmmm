@@ -54,6 +54,8 @@
             android:text="@string/settings_edit_url_small"
             android:textAppearance="@android:style/TextAppearance.Material.Small"
             android:textColor="#808080"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/editUrls"
             app:layout_constraintTop_toBottomOf="@+id/editUrls" />
 
@@ -116,8 +118,11 @@
             android:id="@+id/text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:text="@string/change_dns_menu_small"
             android:textColor="#808080"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/changeDnsButton"
             app:layout_constraintTop_toBottomOf="@+id/changeDnsButton" />
 
@@ -182,6 +187,8 @@
             android:layout_height="wrap_content"
             android:text="@string/allow_apps_menu_small"
             android:textColor="#808080"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/allowApps"
             app:layout_constraintTop_toBottomOf="@+id/allowApps" />
 
@@ -246,6 +253,8 @@
             android:layout_height="wrap_content"
             android:text="@string/delete_app_desc"
             android:textColor="#808080"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/deleteApp"
             app:layout_constraintTop_toBottomOf="@+id/deleteApp" />
 
@@ -311,6 +320,8 @@
             android:onClick="miscSettings"
             android:text="@string/miscellaneousDesc"
             android:textColor="#808080"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/info1"
             app:layout_constraintTop_toBottomOf="@+id/info1" />
 
@@ -376,6 +387,8 @@
             android:onClick="donateSettings"
             android:text="@string/donateDesc"
             android:textColor="#808080"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/info2"
             app:layout_constraintTop_toBottomOf="@+id/info2" />
 
@@ -444,6 +457,8 @@
             android:onClick="aboutLayoutClick"
             android:text="@string/about_settings_small"
             android:textColor="#808080"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/info"
             app:layout_constraintTop_toBottomOf="@+id/info" />
 

@@ -39,6 +39,8 @@
                 android:text="@string/summary_donate"
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textColor="#808080"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
@@ -80,6 +82,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/donate_gp_desc"
                 android:textColor="#808080"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
@@ -120,6 +124,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/donate_pp_desc"
                 android:textColor="#808080"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
