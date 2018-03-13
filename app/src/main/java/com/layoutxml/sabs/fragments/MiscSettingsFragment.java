@@ -2,6 +2,8 @@ package com.layoutxml.sabs.fragments;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.enterprise.ApplicationPolicy;
+import android.app.enterprise.EnterpriseDeviceManager;
 import android.arch.lifecycle.LifecycleFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -11,20 +13,21 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.layoutxml.sabs.BuildConfig;
 import com.layoutxml.sabs.MainActivity;
 import com.layoutxml.sabs.R;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.layoutxml.sabs.Global.BlockPort53;
 import static com.layoutxml.sabs.Global.BlockPortAll;
@@ -49,22 +52,26 @@ public class MiscSettingsFragment extends LifecycleFragment {
         Switch showDialogSwitch = view.findViewById(R.id.showDialogSwitch);
         Switch blackThemeSwitch = view.findViewById(R.id.blackThemeSwitch);
         Switch blockPortSwitch = view.findViewById(R.id.blockPortSwitch);
+        Switch blockThemeStore = view.findViewById(R.id.blockThemeSwitch);
         CheckBox blockPortAllBox = view.findViewById(R.id.blockAllBox);
         TextView blockPortAllText = view.findViewById(R.id.textView21);
         View MiscShowWarning = view.findViewById(R.id.MiscShowWarning);
         View MiscBlackTheme = view.findViewById(R.id.MiscBlackTheme);
         View MiscBlockPort = view.findViewById(R.id.MiscBlockPort);
         View MiscBlockAll = view.findViewById(R.id.MiscBlockAll);
+        View MiscBlockTheme = view.findViewById(R.id.MiscBlockThemes);
         SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         Boolean showDialog = sharedPreferences.getBoolean("showDialog", false);
         Boolean blackTheme = sharedPreferences.getBoolean("blackTheme", false);
         Boolean blockPort = sharedPreferences.getBoolean("blockPort53", true);
         Boolean blockPortAll = sharedPreferences.getBoolean("blockPortAll", false);
+        AtomicReference<Boolean> blockTheme = new AtomicReference<>(sharedPreferences.getBoolean("blockThemeStore", false));
         showDialogSwitch.setChecked(showDialog);
         blackThemeSwitch.setChecked(blackTheme);
         blockPortSwitch.setChecked(blockPort);
         blockPortAllBox.setChecked(blockPortAll);
         blockPortAllBox.setEnabled(blockPort);
+        blockThemeStore.setChecked(blockTheme.get());
         if (blockPort)
         {
             blockPortAllText.setAlpha(1F);
@@ -136,6 +143,42 @@ public class MiscSettingsFragment extends LifecycleFragment {
                 editor.apply();
                 BlockPortAll=isChecked;
             }
+        });
+
+        MiscBlockTheme.setOnClickListener(v -> {
+            EnterpriseDeviceManager edm = (EnterpriseDeviceManager) getActivity().getSystemService(EnterpriseDeviceManager.ENTERPRISE_POLICY_SERVICE);
+            assert edm != null;
+            ApplicationPolicy appPolicy = edm.getApplicationPolicy();
+            if(!blockTheme.get()) {
+                List<String> list = new ArrayList<String>();
+                list.add("com.samsung.android.themestore");
+                list.add("com.samsung.android.themecenter");
+                try {
+                    List<String> addedList = appPolicy.addPackagesToPreventStartBlackList(list);
+                    if (!addedList.isEmpty()) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("blockThemeStore", !blackTheme);
+                        editor.apply();
+                        blockTheme.set(true);
+                    }
+                } catch (SecurityException e) {
+                    Log.e("Exception", "SecurityException: " + e);
+                }
+            } else
+            {
+                try {
+                    boolean status = appPolicy.clearPreventStartBlackList();
+                    if (status){
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("blockThemeStore", !blackTheme);
+                        editor.apply();
+                        blockTheme.set(false);
+                    }
+                } catch (SecurityException e) {
+                    Log.w("Exception", "SecurityException: " + e);
+                }
+            }
+            blockThemeStore.setChecked(blockTheme.get());
         });
 
         return view;
