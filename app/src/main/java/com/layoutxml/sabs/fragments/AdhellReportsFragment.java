@@ -122,7 +122,7 @@ public class AdhellReportsFragment extends LifecycleFragment {
                 if (blackTheme) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()), R.style.BlackAppThemeDialog);
                     builder.setTitle(getString(R.string.action_export_hint));
-                    builder.setMessage("Export domains blocked in the last 24 hours to a file. Choose a file name below.");
+                    builder.setMessage("Export domains blocked in the last " + Integer.toString(RecentActivityDays) + " days to a file. Choose a file name below. \".txt\" extension is added automatically.");
                     final EditText input = new EditText(getContext());
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
                     builder.setView(input);
@@ -152,7 +152,7 @@ public class AdhellReportsFragment extends LifecycleFragment {
                 {
                     AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()), R.style.MainAppThemeDialog);
                     builder.setTitle(getString(R.string.action_export_hint));
-                    builder.setMessage("Export domains blocked in the last 24 hours to a file. Choose a file name below.");
+                    builder.setMessage("Export domains blocked in the last " + Integer.toString(RecentActivityDays) + " days to a file. Choose a file name below. \".txt\" extension is added automatically.");
                     final EditText input = new EditText(getContext());
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
                     builder.setView(input);
@@ -270,6 +270,7 @@ public class AdhellReportsFragment extends LifecycleFragment {
 
     @SuppressLint("StaticFieldLeak")
     private void exportDomains(String filename) {
+        filename = filename.replace(".txt","");
         File file = new File(Environment.getExternalStorageDirectory(), filename+".txt");
         int count=0;
         try {
