@@ -65,13 +65,13 @@ public class MiscSettingsFragment extends LifecycleFragment {
         Boolean blackTheme = sharedPreferences.getBoolean("blackTheme", false);
         Boolean blockPort = sharedPreferences.getBoolean("blockPort53", true);
         Boolean blockPortAll = sharedPreferences.getBoolean("blockPortAll", false);
-        AtomicReference<Boolean> blockTheme = new AtomicReference<>(sharedPreferences.getBoolean("blockThemeStore", false));
+        Boolean blockTheme =  sharedPreferences.getBoolean("blockThemeStore", false);
         showDialogSwitch.setChecked(showDialog);
         blackThemeSwitch.setChecked(blackTheme);
         blockPortSwitch.setChecked(blockPort);
         blockPortAllBox.setChecked(blockPortAll);
         blockPortAllBox.setEnabled(blockPort);
-        blockThemeStore.setChecked(blockTheme.get());
+        blockThemeStore.setChecked(blockTheme);
         if (blockPort)
         {
             blockPortAllText.setAlpha(1F);
@@ -146,39 +146,40 @@ public class MiscSettingsFragment extends LifecycleFragment {
         });
 
         MiscBlockTheme.setOnClickListener(v -> {
+            Log.e("Exception", "1");
+            boolean isChecked = !blockThemeStore.isChecked();
             EnterpriseDeviceManager edm = (EnterpriseDeviceManager) getActivity().getSystemService(EnterpriseDeviceManager.ENTERPRISE_POLICY_SERVICE);
             assert edm != null;
             ApplicationPolicy appPolicy = edm.getApplicationPolicy();
-            if(!blockTheme.get()) {
-                List<String> list = new ArrayList<String>();
-                list.add("com.samsung.android.themestore");
-                list.add("com.samsung.android.themecenter");
+            List<String> pkgList = appPolicy.getPackagesFromPreventStartBlackList();
+            if(!isChecked)
+            {
                 try {
-                    List<String> addedList = appPolicy.addPackagesToPreventStartBlackList(list);
-                    if (!addedList.isEmpty()) {
+                    boolean status = appPolicy.clearPreventStartBlackList();
+                    if (status){
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("blockThemeStore", !blackTheme);
+                        editor.putBoolean("blockThemeStore", false);
                         editor.apply();
-                        blockTheme.set(true);
+                        blockThemeStore.setChecked(false);
                     }
                 } catch (SecurityException e) {
                     Log.e("Exception", "SecurityException: " + e);
                 }
             } else
             {
+                List<String> list = new ArrayList<String>();
+                list.add("com.samsung.android.themestore");
+                list.add("com.samsung.android.themecenter");
                 try {
-                    boolean status = appPolicy.clearPreventStartBlackList();
-                    if (status){
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("blockThemeStore", !blackTheme);
-                        editor.apply();
-                        blockTheme.set(false);
-                    }
+                    List<String> addedList = appPolicy.addPackagesToPreventStartBlackList(list);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("blockThemeStore", true);
+                    editor.apply();
+                    blockThemeStore.setChecked(true);
                 } catch (SecurityException e) {
-                    Log.w("Exception", "SecurityException: " + e);
+                    Log.e("Exception", "SecurityException: " + e);
                 }
             }
-            blockThemeStore.setChecked(blockTheme.get());
         });
 
         return view;

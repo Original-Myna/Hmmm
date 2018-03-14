@@ -20,8 +20,7 @@
             android:background="?android:attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/MiscBlockAll"
-            tools:layout_editor_absoluteY="8dp">
+            app:layout_constraintTop_toBottomOf="@id/MiscBlockAll">
 
             <TextView
                 android:id="@+id/textView22"
