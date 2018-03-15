@@ -1,12 +1,19 @@
 package com.layoutxml.sabs.fragments;
 
+import android.app.enterprise.AppPermissionControlInfo;
+import android.app.enterprise.ApplicationPermissionControlPolicy;
+import android.app.enterprise.EnterpriseDeviceManager;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +36,7 @@ import com.layoutxml.sabs.model.AdhellPermissionInfo;
 import com.layoutxml.sabs.viewmodel.SharedAppPermissionViewModel;
 
 import java.util.List;
+import java.util.Objects;
 
 public class AdhellPermissionInfoFragment extends LifecycleFragment {
     private static final String TAG = AdhellPermissionInfoFragment.class.getCanonicalName();
@@ -37,6 +45,10 @@ public class AdhellPermissionInfoFragment extends LifecycleFragment {
     private SharedAppPermissionViewModel sharedAppPermissionViewModel;
     private FragmentManager fragmentManager;
     private AdhellTurnOnDialogFragment adhellTurnOnDialogFragment;
+    private static SharedPreferences sharedPreferences;
+    private Boolean blackTheme;
+    ApplicationPermissionControlPolicy mAppControlPolicy;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +77,13 @@ public class AdhellPermissionInfoFragment extends LifecycleFragment {
         }
 
         ((MainActivity)getActivity()).showBottomBar();
+
+        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        blackTheme = sharedPreferences.getBoolean("blackTheme", false);
+
+        EnterpriseDeviceManager edm = (EnterpriseDeviceManager) Objects.requireNonNull(getContext()).getSystemService(EnterpriseDeviceManager.ENTERPRISE_POLICY_SERVICE);
+        assert edm != null;
+        mAppControlPolicy = edm.getApplicationPermissionControlPolicy();
 
         sharedAppPermissionViewModel = ViewModelProviders.of(getActivity()).get(SharedAppPermissionViewModel.class);
         fragmentManager = getActivity().getSupportFragmentManager();
@@ -104,6 +123,36 @@ public class AdhellPermissionInfoFragment extends LifecycleFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_restore_perms:
+                if (blackTheme) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()), R.style.BlackAppThemeDialog).create();
+                    alertDialog.setTitle(getString(R.string.restore_permissions));
+                    alertDialog.setMessage(getString(R.string.restore_permissions_message));
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                            (dialog, which) -> {
+                                assert mAppControlPolicy != null;
+                                boolean result = mAppControlPolicy.clearPackagesFromPermissionBlackList();
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                            (dialog, which) -> dialog.dismiss());
+                    alertDialog.setCanceledOnTouchOutside(false);
+                    alertDialog.show();
+                } else
+                {
+                    AlertDialog alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()), R.style.MainAppThemeDialog).create();
+                    alertDialog.setTitle(getString(R.string.restore_permissions));
+                    alertDialog.setMessage(getString(R.string.restore_permissions_message));
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                            (dialog, which) -> {
+                                assert mAppControlPolicy != null;
+                                boolean result = mAppControlPolicy.clearPackagesFromPermissionBlackList();
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                            (dialog, which) -> dialog.dismiss());
+                    alertDialog.setCanceledOnTouchOutside(false);
+                    alertDialog.show();
+                }
+                break;
             case R.id.action_app_settings:
                 Log.d(TAG, "App setting action clicked");
                 fragmentManager

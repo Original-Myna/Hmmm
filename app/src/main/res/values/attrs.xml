@@ -6,4 +6,5 @@
     <attr name="ic_sort" format="reference"/>
     <attr name="ic_action_save" format="reference"/>
     <attr name="ic_action_change_days" format="reference"/>
+    <attr name="ic_action_restore" format="reference"/>
 </resources>

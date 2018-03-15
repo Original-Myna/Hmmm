@@ -178,4 +178,6 @@
     <string name="action_change_days_hint">Change shown time</string>
     <string name="force_stop_theme_store">Force stop Theme Store</string>
     <string name="force_stop_theme_store_desc">Prevent theme store from being launched to allow custom themes from XDA</string>
+    <string name="restore_permissions">Restore permissions</string>
+    <string name="restore_permissions_message">Do you really want to restore all permissions?</string>
 </resources>

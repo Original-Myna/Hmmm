@@ -25,6 +25,7 @@
         <item name="ic_action_change_days">@drawable/ic_action_change_days</item>
         <item name="ic_more_vert">@drawable/ic_more_vert</item>
         <item name="ic_sort">@drawable/ic_sort</item>
+        <item name="ic_action_restore">@drawable/ic_action_restore</item>
         <item name="android:windowDisablePreview">true</item>
     </style>
 
@@ -42,6 +43,7 @@
         <item name="ic_action_change_days">@drawable/ic_action_change_days</item>
         <item name="ic_more_vert">@drawable/ic_more_vert</item>
         <item name="ic_sort">@drawable/ic_sort</item>
+        <item name="ic_action_restore">@drawable/ic_action_restore</item>
         <item name="android:windowDisablePreview">true</item>
     </style>
 
@@ -64,6 +66,7 @@
         <item name="ic_action_change_days">@drawable/ic_action_change_days_dark</item>
         <item name="ic_more_vert">@drawable/ic_more_vert_dark</item>
         <item name="ic_sort">@drawable/ic_sort_dark</item>
+        <item name="ic_action_restore">@drawable/ic_action_restore_dark</item>
         <item name="colorSwitchThumbNormal">@color/colorPrimary</item>
         <item name="android:colorForeground">@color/colorPrimary</item>
         <item name="android:textColorHint">@color/grey</item>
@@ -90,6 +93,7 @@
         <item name="ic_action_change_days">@drawable/ic_action_change_days_dark</item>
         <item name="ic_more_vert">@drawable/ic_more_vert_dark</item>
         <item name="ic_sort">@drawable/ic_sort_dark</item>
+        <item name="ic_action_restore">@drawable/ic_action_restore_dark</item>
         <item name="colorSwitchThumbNormal">@color/colorPrimary</item>
         <item name="android:colorForeground">@color/colorPrimary</item>
         <item name="android:windowDisablePreview">true</item>
