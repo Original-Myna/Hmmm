@@ -1276,6 +1276,8 @@ apopt.hbmediapro.com
 app.adblockhyper.us
 app.datafastguru.info
 app.getresponse.com
+app.monetizze.com.br
+app.pendo.io
 app.scanscout.com
 app.yesware.com
 app1.letitbefaster.life
@@ -1498,6 +1500,7 @@ b1fe8a95ae27823.com
 b-1st.com
 b2b.filecloud.me
 b34rightym.com
+b400393baba7cd476a3.com
 b59812ee54afcabd.com
 ba.afl.rakuten.co.jp
 babanetwork.adk2x.com
@@ -1795,6 +1798,7 @@ brokertraffic.com
 browserbreckalarm.info
 browser-message.com
 browserprotecter.com
+browsersolution.win
 browsesafemac.com
 brunga.at
 bs.israelinfo.ru
@@ -2010,6 +2014,7 @@ campaign.indieclick.com
 campaigns.f2.com.au
 campaigns.interclick.com
 canadaalltax.com
+canadianshawid.com
 caniamedia.com
 canuckmethod.com
 canuckmethod.net
@@ -2282,6 +2287,7 @@ cleanchain.net
 cleaningformac.com
 cleanmobilephone.com
 clean-mobilephone.com
+clearbit.com
 clearonclick.com
 clevernt.com
 clhctrk.com
@@ -2895,6 +2901,7 @@ downads.com
 download.abetterinternet.com
 do-wn-lo-ad.com
 download.filmfanatic.com
+download.inboxace.com
 download.yesmessenger.com
 downloadapps.tech
 downloadcdn.com
@@ -3442,6 +3449,7 @@ gameconsolerewards.com
 gamehouse.com
 gamelights.ru
 gamerz123.com
+games.superappbox.com
 gamesites100.net
 gamesites200.com
 gamesitestop100.com
@@ -3522,6 +3530,7 @@ giftcardsurveys.us.com
 giftrewardzone.com
 gifts-flowers-rewardpath.com
 gift-today85.online
+gigaonclick.com
 gimmethatreward.com
 gingert.net
 girlownedbypolicelike.blogspot.com
@@ -4413,6 +4422,7 @@ live.rads.msn.com
 liveadexchanger.com
 live-cams-1.livejasmin.com
 livecheck.theperfectsystoupdating.date
+livecheck2update.thepointofforcontentingclear.bid
 liveintent.com
 liverail.com
 livestats.atlanta-airport.com
@@ -4652,7 +4662,6 @@ matchcows.com
 matchcraft.com
 matheranalytics.com
 mathtag.com
-matomo.org
 matomy.adk2.co
 matrix.mediavantage.de
 max.i12.de
@@ -4974,6 +4983,7 @@ multi1.rmuk.co.uk
 multimedia-projector.katrina.ru
 murcia-ban.es
 murdoog.com
+music.myappzcenter.com
 music102.awardspace.com
 music611.com
 musiccounter.ru
@@ -5149,6 +5159,7 @@ newnudecash.com
 newopenx.detik.com
 news6health.com
 news-finances.com
+newsprofin.com
 newsreport.com-alerts.info
 newssourceoftoday.com
 newstarads.com
@@ -5168,6 +5179,7 @@ nextbestgame.org
 nextel-ringtone.komi.su
 nextel-ringtone.spb.su
 nextgenstats.com
+nextlnk2.com
 nextlnk7.com
 nextstudent.com
 nexttrk.com
@@ -5511,6 +5523,7 @@ p.twitter.com
 p0rnuha.com
 p1.adhitzads.com
 p2.l.qq.com
+p232207.mybestmv.com
 p3p.alibaba.com
 p3p.mmstat.com
 p4psearch.china.alibaba.com
@@ -5615,7 +5628,6 @@ peep-auktion.de
 peer39.com
 pei-ads.playboy.com
 pei-ads.thesmokingjacket.com
-pendo.io
 pennyweb.com
 people-choice-sites.com
 pepperjamnetwork.com
@@ -5881,6 +5893,7 @@ promote.pair.com
 promote-bz.net
 promotion.partnercash.com
 promotion-campaigns.com
+promotions.sportingbet.com
 promoviral.com
 pronetadvertising.com
 pro-partners.nl
@@ -5967,7 +5980,6 @@ qss-client.qq.com
 qto.reprintingstakeholder.com
 quaintcan.com
 qualifiedourspecialoffer.com
-qualtrics.com
 quantcast.com
 quantserve.com
 quantummetric.com
@@ -6471,6 +6483,7 @@ sessioncam.com
 settings-win.data.microsoft.com
 setupdate24.updateworkfreshandnew.space
 setupdate24.updateworkfreshandnew.website
+setupupgrade12.thepointofforcontentingperfect.win
 sexadvertentiesite.nl
 sexcounter.com
 sexinyourcity.com
@@ -7188,7 +7201,6 @@ ticket20.tripod.com
 tiku.io
 timelywebsitehostesses.com
 tinybar.com
-tinypass.com
 tipsforall.xyz
 tipsurf.com
 tiqcdn.com
@@ -7516,6 +7528,7 @@ update.theplacetoupdating.pw
 updateauto.preparevideosafesystem4unow.site
 updateauto.preparevideosafesystem4unow.space
 updatehere.ultimatesetnewfreeallsoftupgradesystems.pw
+upgradeget.thegreatforupdatesafemove.download
 upgradenote.enterbestforupdating.bid
 upi6.pillsstore-c.com
 uproar.com
@@ -7631,7 +7644,6 @@ vervewireless.com
 verypositiveus.com
 via22.net
 via99.org
-viafoura.co
 viagra-home.com
 viagra-pill.blogspot.com
 viagraviagra.3xforum.ro
