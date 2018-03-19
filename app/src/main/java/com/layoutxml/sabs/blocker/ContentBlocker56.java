@@ -48,9 +48,7 @@ public class ContentBlocker56 implements ContentBlocker {
     @Inject
     AppDatabase appDatabase;
 
-    private ContentBlocker56() {
-        App.get().getAppComponent().inject(this);
-    }
+    private ContentBlocker56() {App.get().getAppComponent().inject(this);}
 
     public static ContentBlocker56 getInstance() {
         if (mInstance == null) {
@@ -65,6 +63,9 @@ public class ContentBlocker56 implements ContentBlocker {
         }
         return mInstance;
     }
+
+    // Initiate the firewall interface
+    fwInterface FW = new fwInterface();
 
     @Override
     public boolean enableBlocker() {
@@ -103,7 +104,7 @@ public class ContentBlocker56 implements ContentBlocker {
                 Log.d(TAG, "Adding: Deny * Port 53");
 
                 // If unable to add the rules to the firewall
-                if(!sendRules(portRules))
+                if(!FW.addFirewallRules(portRules))
                 {
                     // return false (break operation)
                     return false;
@@ -124,7 +125,7 @@ public class ContentBlocker56 implements ContentBlocker {
                     Log.i(TAG, "Adding IPV4/6 rule for: " + app);
 
                     // If unable to add the rules to the firewall
-                    if(!sendRules(portRules))
+                    if(!FW.addFirewallRules(portRules))
                     {
                         //return false (break the operation)
                         return false;
@@ -167,7 +168,7 @@ public class ContentBlocker56 implements ContentBlocker {
             Log.i(TAG, "Adding whitelist rules.");
 
             // If unable to add the rules to the firewall
-            if(!sendRules(whiterules))
+            if(!FW.addDomainFilterRules(whiterules))
             {
                 // return false (break operation)
                 return false;
@@ -254,7 +255,7 @@ public class ContentBlocker56 implements ContentBlocker {
                 Log.i(TAG, partitionDebug);
 
                 // If unable to add the rules to the firewall
-                if(!sendRules(denyrules))
+                if(!FW.addDomainFilterRules(denyrules))
                 {
                     // return false (break operation)
                     return false;
@@ -286,7 +287,7 @@ public class ContentBlocker56 implements ContentBlocker {
             }
 
             // If unable to add the rules to the firewall
-            if(!sendRules(apprules))
+            if(!FW.addDomainFilterRules(apprules))
             {
                 // return false (break operation)
                 return false;
@@ -310,64 +311,6 @@ public class ContentBlocker56 implements ContentBlocker {
         return true;
     }
 
-    public boolean sendRules(List<DomainFilterRule> dfRules)
-    {
-        // If there are domainfilter rules to process
-        if(!dfRules.isEmpty()) {
-
-            try
-            {
-                // Add rules to the firewall
-                FirewallResponse[] response = mFirewall.addDomainFilterRules(dfRules);
-
-                // If the domains are added successfully
-                if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
-                    // Output to debug
-                    Log.i(TAG, "Domain Filter rule(s) added successfully.");
-                } else {
-                    // Output to debug
-                    Log.e(TAG, response[0].getResult().toString());
-                    // Return enabling failed
-                    return false;
-                }
-            }
-            catch(SecurityException ex)
-            {
-                Log.e(TAG, ex.toString());
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public boolean sendRules(FirewallRule[] fwRules)
-    {
-        // If there are firewall rules to process
-        if(fwRules.length > 0) {
-
-            try
-            {
-                // Add rules to the firewall
-                FirewallResponse[] response = mFirewall.addRules(fwRules);
-
-                if (FirewallResponse.Result.SUCCESS == response[0].getResult()) {
-                    Log.i(TAG, "Firewall rule(s) added successfully.");
-                }
-                else
-                {
-                    // Output to debug
-                    Log.d(TAG, "Firewall rule(s) skipped.");
-                }
-
-            } catch (SecurityException ex) {
-                Log.e(TAG, ex.toString());
-                return false;
-            }
-        }
-
-        return true;
-    }
 
     @Override
     public boolean disableBlocker() {
