@@ -19,7 +19,7 @@
     <string name="block_button_text_enabling">Enabling…</string>
     <string name="block_button_text_disabling">Disabling…</string>
     <string name="edit_blocked_url_list">Manage blocked domains</string>
-    <string name="whitelistInfo">Consider whitelisting the app first. You can\'t whitelist wildcards. Enter a valid domain name only. Press on a name to remove it. After whitelisting, turn blocking off then on.</string>
+    <string name="whitelistInfo">Consider whitelisting the app first. You can\'t whitelist wildcards. Enter a valid domain name only. Press on a name to remove it.</string>
     <string name="edit_blocked_apps_list">Manage blocking in apps</string>
     <string name="delete_app">Uninstall SABS</string>
     <string name="delete_app_dialog_title">Delete app</string>
@@ -37,7 +37,7 @@
     <string name="allow_custom_urls">Whitelist domains</string>
     <string name="allow">Allow</string>
     <string name="block_custom_urls">Blacklist domains</string>
-    <string name="blacklistInfo">Enter a valid domain name only. Press on a name to remove it. After blacklisting, turn blocking off then on.</string>
+    <string name="blacklistInfo">Enter a valid domain name only. Press on a name to remove it.</string>
     <string name="download_manager_sharedPrefs" translatable="false">download_manager_sharedPrefs</string>
     <string name="download_manager_reference_id" translatable="false">download_manager_reference_id</string>
     <string name="blocker_fragment_title">Blocker</string>
@@ -130,7 +130,7 @@
     <string name="blacklist_settings_small">Block websites that serve ads not already blocked by your current providers</string>
     <string name="subscribe_settings_small">Add links to lists of ad serving domains</string>
     <string name="summary">Summary</string>
-    <string name="summary_small">Simple Ad Blocker for Samsung (SABS) is an adblocker with extra functionality that is maintained by LayoutXML. It is based on Adhell open source project.</string>
+    <string name="summary_small">Simple Ad Blocker for Samsung (SABS) is an adblocker with extra functionality that is maintained by LayoutXML and MMotti. It is based on Adhell open source project.</string>
     <string name="version">Check for updates</string>
     <string name="send_feedback">Send feedback</string>
     <string name="source_code_github">Source code (Github)</string>
