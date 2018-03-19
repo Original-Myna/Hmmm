@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.layoutxml.sabs.App;
 import com.layoutxml.sabs.db.AppDatabase;
+import com.layoutxml.sabs.db.dao.BlockUrlProviderDao;
 import com.layoutxml.sabs.db.entity.AppInfo;
 import com.layoutxml.sabs.db.entity.AppPermission;
 import com.layoutxml.sabs.db.entity.BlockUrl;
@@ -223,12 +224,23 @@ public class AdhellAppIntegrity {
     }
 
     // Temp fix to accommodate for the standard package URL changes
-    public void removeStandardPackage(BlockUrlProvider blockUrlProvider)
+    public void removeStandardPackage()
     {
         // Get app database
         AppDatabase mDb = AppDatabase.getAppDatabase(App.get().getApplicationContext());
-        // Delete the provider
-        mDb.blockUrlProviderDao().delete(blockUrlProvider);
+
+        // Add standard packages to a list
+        List<BlockUrlProvider> standardPackages = mDb.blockUrlProviderDao().getStandardLists();
+
+        // If there are standard lists
+        if(!standardPackages.isEmpty())
+        {
+            // Delete them
+            mDb.blockUrlProviderDao().deleteStandardLists();
+        }
+
+        // Refresh the standard packages
+        checkAdhellStandardPackage();
     }
 
     public void checkAdhellStandardPackage() {

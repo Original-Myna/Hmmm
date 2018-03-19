@@ -27,6 +27,12 @@ public interface BlockUrlProviderDao {
     @Query("SELECT * FROM BlockUrlProviders WHERE url = :url")
     BlockUrlProvider getByUrl(String url);
 
+    @Query("SELECT * FROM BlockUrlProviders WHERE deletable = 0")
+    List<BlockUrlProvider> getStandardLists();
+
+    @Query("DELETE FROM blockurlproviders WHERE deletable = 0")
+    void deleteStandardLists();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insertAll(BlockUrlProvider... urlProviders);
 

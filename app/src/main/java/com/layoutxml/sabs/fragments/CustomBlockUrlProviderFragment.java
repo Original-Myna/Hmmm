@@ -107,24 +107,21 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
             // TODO: getAll all
             // TODO: then loop and delete and update
             Maybe.fromCallable(() -> {
+
                 // Create a new app integrity instance
                 AdhellAppIntegrity adhellAppIntegrity = new AdhellAppIntegrity();
+
+                // Remove standard packages
+                adhellAppIntegrity.removeStandardPackage();
+
                 // Add blockurlproviders to a list
                 List<BlockUrlProvider> blockUrlProviders = mDb.blockUrlProviderDao().getAll2();
+
                 // Delete all blocked domains
                 mDb.blockUrlDao().deleteAll();
 
                 // For each blockurlprovider
                 for (BlockUrlProvider blockUrlProvider : blockUrlProviders) {
-
-                    // Temporary solution to a change of host-file URL
-                    switch (blockUrlProvider.url)
-                    {
-                        case "https://raw.githubusercontent.com/LayoutXML/SABS/master/standard-package-mmotti.txt" :
-                            adhellAppIntegrity.removeStandardPackage(blockUrlProvider);
-                            adhellAppIntegrity.checkAdhellStandardPackage();
-                            continue;
-                    }
 
                     try {
                         List<BlockUrl> blockUrls = BlockUrlUtils.loadBlockUrls(blockUrlProvider);
