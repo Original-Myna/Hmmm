@@ -8,9 +8,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.text.SpannableString;
@@ -34,6 +32,7 @@ import com.layoutxml.sabs.adapter.BlockUrlProviderAdapter;
 import com.layoutxml.sabs.db.AppDatabase;
 import com.layoutxml.sabs.db.entity.BlockUrl;
 import com.layoutxml.sabs.db.entity.BlockUrlProvider;
+import com.layoutxml.sabs.utils.AdhellAppIntegrity;
 import com.layoutxml.sabs.utils.BlockUrlPatternsMatch;
 import com.layoutxml.sabs.utils.BlockUrlUtils;
 import com.layoutxml.sabs.viewmodel.BlockUrlProvidersViewModel;
@@ -43,8 +42,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -110,9 +107,25 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
             // TODO: getAll all
             // TODO: then loop and delete and update
             Maybe.fromCallable(() -> {
+                // Create a new app integrity instance
+                AdhellAppIntegrity adhellAppIntegrity = new AdhellAppIntegrity();
+                // Add blockurlproviders to a list
                 List<BlockUrlProvider> blockUrlProviders = mDb.blockUrlProviderDao().getAll2();
+                // Delete all blocked domains
                 mDb.blockUrlDao().deleteAll();
+
+                // For each blockurlprovider
                 for (BlockUrlProvider blockUrlProvider : blockUrlProviders) {
+
+                    // Temporary solution to a change of host-file URL
+                    switch (blockUrlProvider.url)
+                    {
+                        case "https://raw.githubusercontent.com/LayoutXML/SABS/master/standard-package-mmotti.txt" :
+                            adhellAppIntegrity.removeStandardPackage(blockUrlProvider);
+                            adhellAppIntegrity.checkAdhellStandardPackage();
+                            continue;
+                    }
+
                     try {
                         List<BlockUrl> blockUrls = BlockUrlUtils.loadBlockUrls(blockUrlProvider);
                         blockUrlProvider.count = blockUrls.size();

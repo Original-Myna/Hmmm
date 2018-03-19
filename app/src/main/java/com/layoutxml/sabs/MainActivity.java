@@ -62,7 +62,7 @@ import static com.layoutxml.sabs.Global.BlockedUniqueUrls;
 public class MainActivity extends AppCompatActivity {
     public static final String ADHELL_STANDARD_PACKAGE = "https://raw.githubusercontent.com/LayoutXML/SABS/master/standard-package.txt";
     public static final String SABS_EXPERIMENTAL_PACKAGE = "https://raw.githubusercontent.com/LayoutXML/SABS/master/standard-package-experimental.txt";
-    public static final String SABS_MMOTTI_PACKAGE = "https://raw.githubusercontent.com/LayoutXML/SABS/master/standard-package-mmotti.txt";
+    public static final String SABS_MMOTTI_PACKAGE = "https://raw.githubusercontent.com/mmotti/mmotti-host-file/master/wildcard_hosts.txt";
     private static final String TAG = MainActivity.class.getCanonicalName();
     private static final String BACK_STACK_TAB_TAG = "tab_fragment";
     protected DeviceAdminInteractor mAdminInteractor;

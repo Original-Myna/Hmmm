@@ -40,7 +40,7 @@ public class AdhellAppIntegrity {
     private static final String DEFAULT_PACKAGES_FIREWALL_WHITELISTED = "default_packages_firewall_whitelisted";
     private static final String CHECK_ADHELL_STANDARD_PACKAGE = "sabs_standard_package";
     private static final String ADHELL_STANDARD_PACKAGE = "https://raw.githubusercontent.com/LayoutXML/SABS/master/standard-package.txt";
-    private static final String SABS_MMOTTI_PACKAGE = "https://raw.githubusercontent.com/LayoutXML/SABS/master/standard-package-mmotti.txt";
+    private static final String SABS_MMOTTI_PACKAGE = "https://raw.githubusercontent.com/mmotti/mmotti-host-file/master/wildcard_hosts.txt";
     private static final String CHECK_PACKAGE_DB = "adhell_packages_filled_db";
 
     @Nullable
@@ -222,6 +222,15 @@ public class AdhellAppIntegrity {
         }
     }
 
+    // Temp fix to accommodate for the standard package URL changes
+    public void removeStandardPackage(BlockUrlProvider blockUrlProvider)
+    {
+        // Get app database
+        AppDatabase mDb = AppDatabase.getAppDatabase(App.get().getApplicationContext());
+        // Delete the provider
+        mDb.blockUrlProviderDao().delete(blockUrlProvider);
+    }
+
     public void checkAdhellStandardPackage() {
         //Standard Package
         BlockUrlProvider blockUrlProvider = appDatabase.blockUrlProviderDao().getByUrl(ADHELL_STANDARD_PACKAGE);
@@ -249,6 +258,7 @@ public class AdhellAppIntegrity {
         //mmotti's Package
         AppDatabase mDb = AppDatabase.getAppDatabase(App.get().getApplicationContext());
         BlockUrlProvider blockUrlProvider2 = appDatabase.blockUrlProviderDao().getByUrl(SABS_MMOTTI_PACKAGE);
+
         if (blockUrlProvider2 == null) {
             blockUrlProvider2 = new BlockUrlProvider();
             blockUrlProvider2.url = SABS_MMOTTI_PACKAGE;
