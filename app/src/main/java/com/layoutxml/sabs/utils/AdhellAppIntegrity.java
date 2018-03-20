@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.layoutxml.sabs.App;
 import com.layoutxml.sabs.db.AppDatabase;
-import com.layoutxml.sabs.db.dao.BlockUrlProviderDao;
 import com.layoutxml.sabs.db.entity.AppInfo;
 import com.layoutxml.sabs.db.entity.AppPermission;
 import com.layoutxml.sabs.db.entity.BlockUrl;
@@ -43,6 +42,9 @@ public class AdhellAppIntegrity {
     private static final String ADHELL_STANDARD_PACKAGE = "https://raw.githubusercontent.com/LayoutXML/SABS/master/standard-package.txt";
     private static final String SABS_MMOTTI_PACKAGE = "https://raw.githubusercontent.com/mmotti/mmotti-host-file/master/wildcard_hosts.txt";
     private static final String CHECK_PACKAGE_DB = "adhell_packages_filled_db";
+
+    // Create a list of our mandatory packages
+    private List<String> sabsstandardPackages = new ArrayList<>(Arrays.asList(ADHELL_STANDARD_PACKAGE, SABS_MMOTTI_PACKAGE));
 
     @Nullable
     @Inject
@@ -223,38 +225,19 @@ public class AdhellAppIntegrity {
         }
     }
 
-    // Temp fix to accommodate for the standard package URL changes
-    public void removeStandardPackage()
+    public void constructStandardPackages(String sabspackage, Boolean selected)
     {
-        // Get app database
         AppDatabase mDb = AppDatabase.getAppDatabase(App.get().getApplicationContext());
+        BlockUrlProvider blockUrlProvider = appDatabase.blockUrlProviderDao().getByUrl(sabspackage);
 
-        // Add standard packages to a list
-        List<BlockUrlProvider> standardPackages = mDb.blockUrlProviderDao().getStandardLists();
-
-        // If there are standard lists
-        if(!standardPackages.isEmpty())
-        {
-            // Delete them
-            mDb.blockUrlProviderDao().deleteStandardLists();
-        }
-
-        // Refresh the standard packages
-        checkAdhellStandardPackage();
-    }
-
-    public void checkAdhellStandardPackage() {
-        //Standard Package
-        BlockUrlProvider blockUrlProvider = appDatabase.blockUrlProviderDao().getByUrl(ADHELL_STANDARD_PACKAGE);
         if (blockUrlProvider == null) {
             blockUrlProvider = new BlockUrlProvider();
-            blockUrlProvider.url = ADHELL_STANDARD_PACKAGE;
+            blockUrlProvider.url = sabspackage;
             blockUrlProvider.lastUpdated = new Date();
             blockUrlProvider.deletable = false;
-            blockUrlProvider.selected = true;
+            blockUrlProvider.selected = selected;
             blockUrlProvider.policyPackageId = DEFAULT_POLICY_ID;
-            long ids[] = appDatabase.blockUrlProviderDao().insertAll(blockUrlProvider);
-            blockUrlProvider.id = ids[0];
+            blockUrlProvider.id = mDb.blockUrlProviderDao().insertAll(blockUrlProvider)[0];
             List<BlockUrl> blockUrls;
             try {
                 blockUrls = BlockUrlUtils.loadBlockUrls(blockUrlProvider);
@@ -266,28 +249,54 @@ public class AdhellAppIntegrity {
                 Log.e(TAG, "Failed to download urls", e);
             }
         }
+    }
 
-        //mmotti's Package
+    public void removeStandardPackage()
+    {
+        // Get app database
         AppDatabase mDb = AppDatabase.getAppDatabase(App.get().getApplicationContext());
-        BlockUrlProvider blockUrlProvider2 = appDatabase.blockUrlProviderDao().getByUrl(SABS_MMOTTI_PACKAGE);
 
-        if (blockUrlProvider2 == null) {
-            blockUrlProvider2 = new BlockUrlProvider();
-            blockUrlProvider2.url = SABS_MMOTTI_PACKAGE;
-            blockUrlProvider2.lastUpdated = new Date();
-            blockUrlProvider2.deletable = false;
-            blockUrlProvider2.selected = true;
-            blockUrlProvider2.policyPackageId = DEFAULT_POLICY_ID;
-            blockUrlProvider2.id = mDb.blockUrlProviderDao().insertAll(blockUrlProvider2)[0];
-            List<BlockUrl> blockUrls2;
-            try {
-                blockUrls2 = BlockUrlUtils.loadBlockUrls(blockUrlProvider2);
-                blockUrlProvider2.count = blockUrls2.size();
-                Log.d(TAG, "Number of urls to insert: " + blockUrlProvider2.count);
-                appDatabase.blockUrlProviderDao().updateBlockUrlProviders(blockUrlProvider2);
-                appDatabase.blockUrlDao().insertAll(blockUrls2);
-            } catch (IOException e) {
-                Log.e(TAG, "Failed to download urls", e);
+        // Add standard packages to a list
+        List<BlockUrlProvider> standardPackages = mDb.blockUrlProviderDao().getStandardLists();
+        // Add selected packages to a list
+        List<BlockUrlProvider> selectedPackages = mDb.blockUrlProviderDao().getStandardListsBySelectFlag(1);
+        // Create a new list to hold selected sabs packages
+        List<String> sabsStandardSelectedPackages = new ArrayList<String>();
+
+        // Add each selected standard package to our list
+        for(BlockUrlProvider selectedPackage : selectedPackages)
+        {
+            sabsStandardSelectedPackages.add(selectedPackage.url);
+        }
+
+        // If there are standard packages, delete them
+        if(!standardPackages.isEmpty())
+        {
+            mDb.blockUrlProviderDao().deleteStandardLists();
+        }
+
+        // Refresh the standard packages
+        checkAdhellStandardPackage(sabsStandardSelectedPackages);
+    }
+
+    public void checkAdhellStandardPackage() {
+        // Default: Send 'selected' array
+        checkAdhellStandardPackage(new ArrayList<String>());
+    }
+
+    public void checkAdhellStandardPackage(List<String> sabsStandardSelectedPackages) {
+
+        // For each SABS standard package
+        for(String sabspackage : sabsstandardPackages)
+        {
+            // If the package was previously selected, keep it so. Otherwise, set selected false
+            if(sabsStandardSelectedPackages.contains(sabspackage))
+            {
+                constructStandardPackages(sabspackage, true);
+            }
+            else
+            {
+                constructStandardPackages(sabspackage, false);
             }
         }
     }

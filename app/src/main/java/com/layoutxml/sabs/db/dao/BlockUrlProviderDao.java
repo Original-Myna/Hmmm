@@ -24,6 +24,9 @@ public interface BlockUrlProviderDao {
     @Query("SELECT * FROM BlockUrlProviders WHERE selected = :selected")
     List<BlockUrlProvider> getBlockUrlProviderBySelectedFlag(int selected);
 
+    @Query("SELECT * FROM BlockUrlProviders WHERE selected = :selected AND deletable = 0")
+    List<BlockUrlProvider> getStandardListsBySelectFlag(int selected);
+
     @Query("SELECT * FROM BlockUrlProviders WHERE url = :url")
     BlockUrlProvider getByUrl(String url);
 
