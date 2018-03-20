@@ -227,7 +227,6 @@ public class AdhellAppIntegrity {
 
     public void constructStandardPackages(String sabspackage, Boolean selected)
     {
-        AppDatabase mDb = AppDatabase.getAppDatabase(App.get().getApplicationContext());
         BlockUrlProvider blockUrlProvider = appDatabase.blockUrlProviderDao().getByUrl(sabspackage);
 
         if (blockUrlProvider == null) {
@@ -237,7 +236,7 @@ public class AdhellAppIntegrity {
             blockUrlProvider.deletable = false;
             blockUrlProvider.selected = selected;
             blockUrlProvider.policyPackageId = DEFAULT_POLICY_ID;
-            blockUrlProvider.id = mDb.blockUrlProviderDao().insertAll(blockUrlProvider)[0];
+            blockUrlProvider.id = appDatabase.blockUrlProviderDao().insertAll(blockUrlProvider)[0];
             // Only fetch the domains if the package is selected
             if(selected) {
                 List<BlockUrl> blockUrls;
@@ -256,13 +255,10 @@ public class AdhellAppIntegrity {
 
     public void removeStandardPackage()
     {
-        // Get app database
-        AppDatabase mDb = AppDatabase.getAppDatabase(App.get().getApplicationContext());
-
         // Add standard packages to a list
-        List<BlockUrlProvider> standardPackages = mDb.blockUrlProviderDao().getStandardLists();
+        List<BlockUrlProvider> standardPackages = appDatabase.blockUrlProviderDao().getStandardLists();
         // Add selected packages to a list
-        List<BlockUrlProvider> selectedPackages = mDb.blockUrlProviderDao().getStandardListsBySelectFlag(1);
+        List<BlockUrlProvider> selectedPackages = appDatabase.blockUrlProviderDao().getStandardListsBySelectFlag(1);
         // Create a new list to hold selected sabs packages
         List<String> sabsStandardSelectedPackages = new ArrayList<String>();
 
@@ -275,7 +271,7 @@ public class AdhellAppIntegrity {
         // If there are standard packages, delete them
         if(!standardPackages.isEmpty())
         {
-            mDb.blockUrlProviderDao().deleteStandardLists();
+            appDatabase.blockUrlProviderDao().deleteStandardLists();
         }
 
         // Refresh the standard packages
@@ -283,11 +279,32 @@ public class AdhellAppIntegrity {
     }
 
     public void checkAdhellStandardPackage() {
-        // Default: Send 'selected' array
-        checkAdhellStandardPackage(new ArrayList<String>());
+
+        /*
+            This is called by MainActivity. The basic check for whether the standard packages are in the DB.
+        */
+
+        // For each SABS standard package
+        for(String sabspackage : sabsstandardPackages) {
+
+            // Get the current iteration's provider from the DB
+            BlockUrlProvider blockUrlProvider = appDatabase.blockUrlProviderDao().getByUrl(sabspackage);
+
+            // If it's not found, add it back and select it (simulate first run)
+            if(blockUrlProvider == null)
+            {
+                constructStandardPackages(sabspackage, true);
+            }
+        }
     }
 
     public void checkAdhellStandardPackage(List<String> sabsStandardSelectedPackages) {
+
+         /*
+            This is our more advanced check, called after the Update All Providers has taken place.
+            As we are re-adding the standard packages, we need to take into account whether they
+            were previously selected.
+         */
 
         // For each SABS standard package
         for(String sabspackage : sabsstandardPackages)
