@@ -238,15 +238,18 @@ public class AdhellAppIntegrity {
             blockUrlProvider.selected = selected;
             blockUrlProvider.policyPackageId = DEFAULT_POLICY_ID;
             blockUrlProvider.id = mDb.blockUrlProviderDao().insertAll(blockUrlProvider)[0];
-            List<BlockUrl> blockUrls;
-            try {
-                blockUrls = BlockUrlUtils.loadBlockUrls(blockUrlProvider);
-                blockUrlProvider.count = blockUrls.size();
-                Log.d(TAG, "Number of urls to insert: " + blockUrlProvider.count);
-                appDatabase.blockUrlProviderDao().updateBlockUrlProviders(blockUrlProvider);
-                appDatabase.blockUrlDao().insertAll(blockUrls);
-            } catch (IOException e) {
-                Log.e(TAG, "Failed to download urls", e);
+            // Only fetch the domains if the package is selected
+            if(selected) {
+                List<BlockUrl> blockUrls;
+                try {
+                    blockUrls = BlockUrlUtils.loadBlockUrls(blockUrlProvider);
+                    blockUrlProvider.count = blockUrls.size();
+                    Log.d(TAG, "Number of urls to insert: " + blockUrlProvider.count);
+                    appDatabase.blockUrlProviderDao().updateBlockUrlProviders(blockUrlProvider);
+                    appDatabase.blockUrlDao().insertAll(blockUrls);
+                } catch (IOException e) {
+                    Log.e(TAG, "Failed to download urls", e);
+                }
             }
         }
     }

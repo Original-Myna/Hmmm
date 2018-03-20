@@ -114,8 +114,8 @@ public class CustomBlockUrlProviderFragment extends LifecycleFragment {
                 // Remove standard packages
                 adhellAppIntegrity.removeStandardPackage();
 
-                // Add blockurlproviders to a list
-                List<BlockUrlProvider> blockUrlProviders = mDb.blockUrlProviderDao().getAll2();
+                // Add selected blockurlproviders to a list
+                List<BlockUrlProvider> blockUrlProviders = mDb.blockUrlProviderDao().getBlockUrlProviderBySelectedFlag(1);
 
                 // Delete all blocked domains
                 mDb.blockUrlDao().deleteAll();
