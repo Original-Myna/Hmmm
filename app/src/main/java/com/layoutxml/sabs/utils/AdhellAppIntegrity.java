@@ -260,11 +260,10 @@ public class AdhellAppIntegrity {
 
         /* Called by Main Activity */
 
-        // Temporarily remove SABS standard list
-        sabsstandardPackages.remove(ADHELL_STANDARD_PACKAGE);
-
         // Get all packages
         List<BlockUrlProvider> allProviders = appDatabase.blockUrlProviderDao().getAll2();
+        // Get all standard packages
+        List<BlockUrlProvider> standardLists = appDatabase.blockUrlProviderDao().getStandardListsNew();
         // Get all un-deletable packages
         List<BlockUrlProvider> ud_standardLists = appDatabase.blockUrlProviderDao().getStandardLists();
         // Get selected un-deletable packages
@@ -320,6 +319,26 @@ public class AdhellAppIntegrity {
                    constructStandardPackages(standardPackage, false);
                }
            }
+        }
+
+        /*
+            User has an old default package
+            Let's delete it
+        */
+
+        // If the user has standard lists
+        if(!standardLists.isEmpty())
+        {
+            // For each standard list
+            for(BlockUrlProvider standardList : standardLists)
+            {
+                String URL = standardList.url;
+
+                if(!sabsstandardPackages.contains(URL))
+                {
+                    appDatabase.blockUrlProviderDao().delete(standardList);
+                }
+            }
         }
     }
 
