@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.layoutxml.sabs.App;
+import com.layoutxml.sabs.MainActivity;
 import com.layoutxml.sabs.db.AppDatabase;
 import com.layoutxml.sabs.db.entity.AppInfo;
 import com.layoutxml.sabs.db.entity.AppPermission;
@@ -39,12 +40,10 @@ public class AdhellAppIntegrity {
     private static final String MOVE_APP_PERMISSIONS = "adhell_app_permissions_moved";
     private static final String DEFAULT_PACKAGES_FIREWALL_WHITELISTED = "default_packages_firewall_whitelisted";
     private static final String CHECK_ADHELL_STANDARD_PACKAGE = "sabs_standard_package";
-    private static final String ADHELL_STANDARD_PACKAGE = "https://raw.githubusercontent.com/LayoutXML/SABS/master/standard-package.txt";
-    private static final String SABS_MMOTTI_PACKAGE = "https://raw.githubusercontent.com/mmotti/mmotti-host-file/master/wildcard_hosts.txt";
     private static final String CHECK_PACKAGE_DB = "adhell_packages_filled_db";
 
     // Create a list of our mandatory packages
-    private List<String> sabsstandardPackages = new ArrayList<>(Arrays.asList(ADHELL_STANDARD_PACKAGE, SABS_MMOTTI_PACKAGE));
+    private List<String> sabsstandardPackages = new ArrayList<>(Arrays.asList(MainActivity.SABS_SMALL_PACKAGE, MainActivity.SABS_LARGE_PACKAGE, MainActivity.SABS_MMOTTI_PACKAGE));
 
     @Nullable
     @Inject
