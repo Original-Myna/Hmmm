@@ -267,11 +267,11 @@ public class AdhellAppIntegrity {
         // Get all packages
         List<BlockUrlProvider> allProviders = appDatabase.blockUrlProviderDao().getAll2();
         // Get all un-deletable packages
-        List<BlockUrlProvider> standardLists = appDatabase.blockUrlProviderDao().getStandardLists();
+        List<BlockUrlProvider> ud_standardLists = appDatabase.blockUrlProviderDao().getStandardLists();
         // Get selected un-deletable packages
-        List<BlockUrlProvider> selectedStandardLists = appDatabase.blockUrlProviderDao().getStandardListsBySelectFlag(1);
+        List<BlockUrlProvider> ud_selectedStandardLists = appDatabase.blockUrlProviderDao().getStandardListsBySelectFlag(1);
         // Create a list to hold the URL of un-deletable packages
-        List<String> selectedactiveStandardListsURLS = new ArrayList<>();
+        List<String> ud_selectedactiveStandardListsURLS = new ArrayList<>();
 
         /*
             User has NO packages
@@ -294,25 +294,25 @@ public class AdhellAppIntegrity {
             Let's re-add them as deletable.
         */
 
-        if(!standardLists.isEmpty())
+        if(!ud_standardLists.isEmpty())
         {
             // Delete them
             appDatabase.blockUrlProviderDao().deleteStandardLists();
 
             // If there were selected standard lists
-            if(!selectedStandardLists.isEmpty())
+            if(!ud_selectedStandardLists.isEmpty())
             {
                 // For each one, add the URL to our list
-                for(BlockUrlProvider selectedStandard : selectedStandardLists)
+                for(BlockUrlProvider selectedStandard : ud_selectedStandardLists)
                 {
-                    selectedactiveStandardListsURLS.add(selectedStandard.url);
+                    ud_selectedactiveStandardListsURLS.add(selectedStandard.url);
                 }
             }
 
             // For each standard package
            for(String standardPackage : sabsstandardPackages)
            {
-               if(selectedactiveStandardListsURLS.contains(standardPackage))
+               if(ud_selectedactiveStandardListsURLS.contains(standardPackage))
                {
                    constructStandardPackages(standardPackage, true);
                }
