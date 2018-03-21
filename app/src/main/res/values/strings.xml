@@ -59,6 +59,7 @@
     <string name="subscribe_to_providers">Subscribe to providers</string>
     <string name="delete_url">Delete URL</string>
     <string name="update_all_providers">Update All</string>
+    <string name="update_selected_providers">Update Selected</string>
     <string name="error_reading_date">Error reading date</string>
     <string name="app_list_sorted_by_date">Sorted by installation date</string>
     <string name="app_list_sorted_by_alphabet">Sorted alphabetically</string>
