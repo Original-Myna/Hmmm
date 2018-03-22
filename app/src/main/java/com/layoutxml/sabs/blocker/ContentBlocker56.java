@@ -351,6 +351,10 @@ public class ContentBlocker56 implements ContentBlocker {
 
     @Override
     public boolean disableBlocker() {
+        // Set the number of blocked domains to 0
+        BlockedUniqueUrls = 0;
+        MainActivity.updateBlockCount();
+
         FirewallResponse[] response;
         try {
             Log.i(TAG, "Clearing SABS firewall rules...");

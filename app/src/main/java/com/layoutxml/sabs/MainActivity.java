@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         Boolean askedDonate = sharedPreferences.getBoolean("donate", false);
         BlockPort53 = sharedPreferences.getBoolean("blockPort53", true);
         BlockPortAll = sharedPreferences.getBoolean("blockPortAll", false);
-        if (BlockedUniqueUrls==0)
+        if (BlockedUniqueUrls==-1)
             BlockedUniqueUrls = sharedPreferences.getInt("blockedUrls", 0);
         if (blackTheme)
             setTheme(R.style.BlackAppTheme);
@@ -325,11 +325,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static void updateBlockCount() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (BlockedUniqueUrls!=0)
-        {
-            editor.putInt("blockedUrls", BlockedUniqueUrls);
-            editor.apply();
-        }
+        editor.putInt("blockedUrls", BlockedUniqueUrls);
+        editor.apply();
     }
 
     public void showDialog() {
