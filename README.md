@@ -131,8 +131,10 @@ You will receive the notification when a new version of SABS is released when yo
 You may already have a Samsung license key. Open the old version which is already installed on your phone, go to SABS Settings > About > Copy KNOX key.
 If your key expired, you can generate a new one after revoking the old one. The process should be similar to the one you have completed previously.
 </details>
+
 #### Step II - Changing the package name
 To update the app, you don't need to uninstall the old version. Simply rename the new package name to the same you used before.
+
 ##### a - With a computer
 <details>
   <summary>Click to expand instructions</summary>
