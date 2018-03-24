@@ -89,6 +89,7 @@ You can choose to change a package name of the app with or without a computer. B
 <details>
   <summary>Click to expand instructions</summary>
 Follow along [this video](https://www.youtube.com/watch?v=cWO96NGnsSQ) to make sure you are following the steps correctly.
+   
 1. Download and extract the latest source code of the SABS app [here](https://github.com/LayoutXML/SABS/archive/master.zip).
 2. Download, install and open Android Studio from [here](https://developer.android.com/studio/index.html).
 3. Select "Open an existing Android Studio project" and choose the extracted folder
@@ -139,6 +140,7 @@ To update the app, you don't need to uninstall the old version. Simply rename th
 <details>
   <summary>Click to expand instructions</summary>
 Assuming you haven't uninstall Android Studio, follow the steps below.
+   
 1. Download and extract the latest source code of the SABS app [here](https://github.com/LayoutXML/SABS/archive/master.zip).
 2. Open Android Studio and select "Open an existing Android Studio project" and choose the extracted folder.
 3. You may be asked to install SDK and other files. Follow the instructions on the screen.
@@ -156,6 +158,7 @@ Assuming you haven't uninstall Android Studio, follow the steps below.
 ##### b - With your phone
 <details>
   <summary>Click to expand instructions</summary>
+   
 1. Download the latest version (apk file) [here](https://github.com/LayoutXML/SABS/releases).
 2. Open "APK Editor Pro" app.
 3. Select apk file (previously downloaded).
